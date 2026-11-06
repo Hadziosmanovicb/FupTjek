@@ -1,13 +1,23 @@
 
+
 import { useState } from 'react'
+import { detectTimePressure } from './utils/scamDetector'
 import './App.css'
 
 function App() {
   const [message, setMessage] = useState('')
   
+
 function handleCheck() {
-  alert(message)
+  const hasTimePressure = detectTimePressure(message)
+
+  if (hasTimePressure) {
+    alert('Advarsel: Beskeden indeholder tidspres!')
+  } else {
+    alert('Ingen tegn på tidspres fundet.')
+  }
 }
+
 
 
   return (
