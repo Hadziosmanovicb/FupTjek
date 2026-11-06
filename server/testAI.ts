@@ -19,10 +19,9 @@ inden 24 timer via dette link."`,
   })
 
 
-console.log('Response status:', response.status)
-console.log('Incomplete details:', response.incomplete_details)
-console.log('Output:', JSON.stringify(response.output, null, 2))
-console.log('Token usage:', response.usage)
+
+console.log(response.output_text)
+
 }
 
 testAI().catch((error) => {
