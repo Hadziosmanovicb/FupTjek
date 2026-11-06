@@ -12,11 +12,24 @@ const [result, setResult] = useState<boolean | null>(null)
   
 
 
-function handleCheck() {
-  const hasTimePressure = detectTimePressure(message)
 
+async function handleCheck() {
+  const hasTimePressure = detectTimePressure(message)
   setResult(hasTimePressure)
+
+  const response = await fetch('http://localhost:3001/analyze', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ message }),
+  })
+
+  const data = await response.json()
+
+  console.log('AI-analyse:', data.analysis)
 }
+
 
 
 
