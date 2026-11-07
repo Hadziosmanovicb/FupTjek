@@ -10,7 +10,7 @@ function App() {
   // Resultatet fra vores regelbaserede tjek
   const [result, setResult] = useState<boolean | null>(null)
 
-  // Resultatet fra OpenAI
+  // Resultatet fra OpenAIs
   const [aiResult, setAiResult] = useState('')
 
   // Viser om AI'en arbejder
