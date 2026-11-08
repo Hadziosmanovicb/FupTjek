@@ -41,7 +41,11 @@ const [sources, setSources] = useState<
     setShowHelp(false)
 
     try {
-      const response = await fetch('http://localhost:3001/analyze', {
+
+const apiUrl =
+  import.meta.env.VITE_API_URL || 'http://localhost:3001'
+
+const response = await fetch(`${apiUrl}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -8,11 +8,12 @@ import { findRelevantSources } from './knowledge/sources.ts'
 // FUPTJEK - SIKKERHEDSINDSTILLINGER
 // ==========================================
 
-const PORT = 3001
-const HOST = '127.0.0.1'
-
-const ALLOWED_ORIGIN = 'http://localhost:5173'
-
+const PORT = Number(process.env.PORT) || 3001
+const HOST = process.env.NODE_ENV === 'production'
+  ? '0.0.0.0'
+  : '127.0.0.1'
+const ALLOWED_ORIGIN =
+  process.env.FRONTEND_URL || 'http://localhost:5173'
 const MAX_SMS_LENGTH = 5000
 const MAX_REQUEST_BYTES = 25 * 1024
 
