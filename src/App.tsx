@@ -1,39 +1,32 @@
 
 import { useState } from 'react'
-import { detectTimePressure } from './utils/scamDetector'
 import './App.css'
 
+// Sådan ser AI'ens strukturerede svar ud
+type Analysis = {
+  riskLevel: 'high' | 'caution' | 'uncertain'
+  summary: string
+  warningSigns: {
+    title: string
+    explanation: string
+  }[]
+  recommendation: string
+}
+
 function App() {
-  // SMS'en, som brugeren skriver
   const [message, setMessage] = useState('')
-
-  // Resultatet fra vores regelbaserede tjek
-  const [result, setResult] = useState<boolean | null>(null)
-
-  // Resultatet fra OpenAIs
-  const [aiResult, setAiResult] = useState('')
-
-  // Viser om AI'en arbejder
+  const [analysis, setAnalysis] = useState<Analysis | null>(null)
   const [loading, setLoading] = useState(false)
-
-  // Fejlbesked, hvis noget går galt
   const [error, setError] = useState('')
 
   async function handleCheck() {
-    if (!message.trim() || loading) {
-      return
-    }
+    if (!message.trim() || loading) return
 
     setLoading(true)
     setError('')
-    setAiResult('')
-
-    // 1. Vores eksisterende regelbaserede tjek
-    const hasTimePressure = detectTimePressure(message)
-    setResult(hasTimePressure)
+    setAnalysis(null)
 
     try {
-      // 2. Send SMS'en til vores Node.js-backend
       const response = await fetch('http://localhost:3001/analyze', {
         method: 'POST',
         headers: {
@@ -42,26 +35,22 @@ function App() {
         body: JSON.stringify({ message }),
       })
 
-      // 3. Læs svaret fra backenden
       const data = await response.json()
 
       if (!response.ok) {
         throw new Error(data.error || 'Der opstod en fejl')
       }
 
-      if (typeof data.analysis !== 'string' || !data.analysis.trim()) {
-        throw new Error('AI-analysen var tom')
+      if (!data.structuredAnalysis) {
+        throw new Error('AI-resultatet mangler')
       }
 
-      // 4. Gem AI-resultatet, så React viser det
-      setAiResult(data.analysis)
+      setAnalysis(data.structuredAnalysis)
 
     } catch (err) {
       console.error('Fejl ved AI-analyse:', err)
       setError('Kunne ikke hente AI-analysen. Prøv igen senere.')
-
     } finally {
-      // Kører både ved succes og fejl
       setLoading(false)
     }
   }
@@ -79,8 +68,7 @@ function App() {
         value={message}
         onChange={(event) => {
           setMessage(event.target.value)
-          setResult(null)
-          setAiResult('')
+          setAnalysis(null)
           setError('')
         }}
       />
@@ -93,51 +81,39 @@ function App() {
         {loading ? 'Analyserer...' : 'Tjek besked'}
       </button>
 
-      {result !== null && (
-        <section>
-          <h2>Regelbaseret tjek</h2>
+      {loading && <p>AI'en analyserer din besked...</p>}
 
-          {result ? (
-            <p>
-              Advarsel: Beskeden indeholder tegn på tidspres.
-            </p>
-          ) : (
-            <p>
-              Ingen af vores kendte tegn på tidspres blev fundet.
-              Det betyder ikke, at beskeden er sikker.
-            </p>
+      {analysis && (
+        <section>
+          <h2>
+            {analysis.riskLevel === 'high'
+              ? 'Flere alvorlige advarselstegn'
+              : analysis.riskLevel === 'caution'
+                ? 'Mulige advarselstegn'
+                : 'Ikke nok information eller ingen tydelige tegn'}
+          </h2>
+
+          <p>{analysis.summary}</p>
+
+          {analysis.warningSigns.length > 0 && (
+            <>
+              <h3>Hvad har vi fundet?</h3>
+
+              {analysis.warningSigns.map((sign, index) => (
+                <div key={index}>
+                  <h4>{sign.title}</h4>
+                  <p>{sign.explanation}</p>
+                </div>
+              ))}
+            </>
           )}
+
+          <h3>Hvad skal du gøre?</h3>
+          <p>{analysis.recommendation}</p>
         </section>
       )}
 
-      {loading && (
-        <p>AI'en analyserer din besked...</p>
-      )}
-
-      {aiResult && (
-        <section>
-          <h2>AI-analyse</h2>
-
-          <p style={{ whiteSpace: 'pre-wrap' }}>
-            {aiResult}
-          </p>
-        </section>
-      )}
-
-      {error && (
-        <p role="alert">{error}</p>
-      )}
-
-      {result !== null && (
-        <section>
-          <h2>Gode råd</h2>
-
-          <p>
-            Klik ikke på mistænkelige links.
-            Kontakt altid virksomheden via dens officielle hjemmeside.
-          </p>
-        </section>
-      )}
+      {error && <p role="alert">{error}</p>}
 
       <p>
         FupTjek giver vejledende vurderinger og kan ikke
