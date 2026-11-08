@@ -22,6 +22,11 @@ type Analysis = {
 function App() {
   const [message, setMessage] = useState('')
   const [analysis, setAnalysis] = useState<Analysis | null>(null)
+  
+const [sources, setSources] = useState<
+  { title: string; url: string }[]
+>([])
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showHelp, setShowHelp] = useState(false)
@@ -32,6 +37,7 @@ function App() {
     setLoading(true)
     setError('')
     setAnalysis(null)
+    setSources([])
     setShowHelp(false)
 
     try {
@@ -54,6 +60,9 @@ function App() {
       }
 
       setAnalysis(data.structuredAnalysis)
+      
+setSources(data.sources ?? [])
+
     } catch (err) {
       console.error('Fejl ved AI-analyse:', err)
       setError('Kunne ikke hente analysen. Prøv igen.')
@@ -133,6 +142,7 @@ function App() {
             onChange={(event) => {
               setMessage(event.target.value)
               setAnalysis(null)
+              setSources([])
               setError('')
               setShowHelp(false)
             }}
@@ -250,6 +260,31 @@ function App() {
                   ))}
                 </ol>
               </div>
+
+{sources.length > 0 && (
+  <div className="result-section">
+    <h3>Relateret officiel vejledning</h3>
+
+    <p>
+      FupTjek har fundet sikkerhedsviden knyttet
+      til følgende officielle kilder:
+    </p>
+
+    <ul className="source-list">
+      {sources.map((source) => (
+        <li key={source.url}>
+          <a
+            href={source.url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {source.title} ↗
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
 
               <div className="help-section">
                 <button

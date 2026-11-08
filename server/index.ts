@@ -52,6 +52,17 @@ const server = createServer((req, res) => {
 
 const relevantSources = findRelevantSources(sms)
 
+
+console.log('--- FupTjek RAG ---')
+console.log('Antal relevante kilder:', relevantSources.length)
+
+for (const source of relevantSources) {
+  console.log('Kilde:', source.title)
+  console.log('Officiel URL:', source.url)
+}
+
+console.log('-------------------')
+
 const knowledgeContext = relevantSources.map((source) => {
   return `
 Kilde: ${source.title}
@@ -218,10 +229,16 @@ for (const sign of result.warningSigns) {
           'Content-Type': 'application/json; charset=utf-8',
         })
 
-        res.end(JSON.stringify({
-          structuredAnalysis: result,
-          analysis: result.summary,
-        }))
+       
+res.end(JSON.stringify({
+  structuredAnalysis: result,
+  analysis: result.summary,
+
+  sources: relevantSources.map((source) => ({
+    title: source.title,
+    url: source.url,
+  })),
+}))
 
       } catch (error) {
         console.error('Fejl ved analyse:', error)
