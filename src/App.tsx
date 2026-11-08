@@ -56,7 +56,7 @@ function App() {
       setAnalysis(data.structuredAnalysis)
     } catch (err) {
       console.error('Fejl ved AI-analyse:', err)
-      setError('Kunne ikke hente AI-analysen. Prøv igen senere.')
+      setError('Kunne ikke hente analysen. Prøv igen.')
     } finally {
       setLoading(false)
     }
@@ -69,109 +69,221 @@ function App() {
   }
 
   const scamName = analysis?.scamType.name.toLowerCase() ?? ''
+
   const hasScamType =
     analysis !== null &&
     analysis.riskLevel !== 'uncertain' &&
     !scamName.includes('ukendt') &&
-    !scamName.includes('ingen identificeret')
+    !scamName.includes('ingen identificeret') &&
+    !scamName.includes('ingen bestemt')
 
   return (
-    <main>
-      <h1>FupTjek</h1>
-      <p>Er du i tvivl om en SMS?</p>
-      <p>Vi hjælper dig med at forstå beskeden.</p>
+    <div className="site">
+      <header className="site-header">
+        <div className="container header-inner">
+          <div className="brand">
+            <div className="brand-icon" aria-hidden="true">
+              <svg
+                width="26"
+                height="26"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </div>
+            <span>FupTjek</span>
+          </div>
 
-      <textarea
-        placeholder="Indsæt din mistænkelige SMS her..."
-        rows={5}
-        maxLength={5000}
-        value={message}
-        onChange={(event) => {
-          setMessage(event.target.value)
-          setAnalysis(null)
-          setError('')
-          setShowHelp(false)
-        }}
-      />
+          <span className="header-label">Din digitale svindelhjælper</span>
+        </div>
+      </header>
 
-      <button
-        type="button"
-        onClick={handleCheck}
-        disabled={loading || !message.trim()}
-      >
-        {loading ? 'Analyserer...' : 'Tjek besked'}
-      </button>
-
-      {loading && <p role="status">Analyserer din besked...</p>}
-      {error && <p role="alert">{error}</p>}
-
-      {analysis && (
-        <section aria-label="Resultat">
-          <h2>Din vurdering</h2>
-
-          {/* 1. Vurdering */}
-          <section>
-            <h3>{riskTitle(analysis.riskLevel)}</h3>
-            <p>{analysis.summary}</p>
-
-            {analysis.warningSigns.length > 0 && (
-              <ul>
-                {analysis.warningSigns.slice(0, 3).map((sign, index) => (
-                  <li key={index}>
-                    <strong>{sign.title}</strong>
-                    {sign.evidence && <span> – "{sign.evidence}"</span>}
-                    <p>{sign.explanation}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
-          {/* 2. Mulig svindeltype */}
-          {hasScamType && (
-            <section>
-              <h3>Hvilken slags svindel?</h3>
-              <strong>{analysis.scamType.name}</strong>
-              <p>{analysis.scamType.explanation}</p>
-            </section>
-          )}
-
-          {/* 3. Konkrete råd */}
-          <section>
-            <h3>Hvad skal du gøre?</h3>
-            <ol>
-              {analysis.actionSteps.slice(0, 3).map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
-          </section>
-
-          {/* Ekstra hjælp */}
-          <section>
-            <button
-              type="button"
-              aria-expanded={showHelp}
-              onClick={() => setShowHelp(!showHelp)}
-            >
-              Har du allerede klikket eller betalt?
-              {showHelp ? ' ▲' : ' ▼'}
-            </button>
-
-            {showHelp && (
-              <div>
-                <h3>Vi hjælper dig</h3>
-                <p>{analysis.helpAdvice}</p>
-              </div>
-            )}
-          </section>
+      <main className="container main-content">
+        <section className="hero">
+          <span className="eyebrow">TRYGHED STARTER MED ET TJEK</span>
+          <h1>Er den besked ægte?</h1>
+          <p>
+            Modtaget en SMS, du er i tvivl om?
+            Vi hjælper dig med at forstå beskeden
+            og finde ud af, hvad du skal gøre.
+          </p>
         </section>
-      )}
 
-      <p>
-        FupTjek giver vejledende vurderinger og kan ikke
-        garantere, om en besked er sikker eller svindel.
-      </p>
-    </main>
+        <section className="input-card">
+          <label htmlFor="sms-message" className="input-label">
+            Indsæt din SMS her
+          </label>
+
+          <p className="input-hint">
+            Kopiér beskeden ind i feltet nedenfor.
+          </p>
+
+          <textarea
+            id="sms-message"
+            placeholder="Eksempel: Din pakke er tilbageholdt. Betal 45 kr. inden 24 timer..."
+            rows={6}
+            maxLength={5000}
+            value={message}
+            onChange={(event) => {
+              setMessage(event.target.value)
+              setAnalysis(null)
+              setError('')
+              setShowHelp(false)
+            }}
+          />
+
+          <div className="input-footer">
+            <span className="character-count">
+              {message.length} / 5000 tegn
+            </span>
+          </div>
+
+          <button
+            className="analyze-button"
+            type="button"
+            onClick={handleCheck}
+            disabled={loading || !message.trim()}
+          >
+            {loading ? 'Analyserer din besked...' : 'Tjek min besked'}
+          </button>
+
+          <p className="privacy-hint">
+            Undgå at indsætte CPR-numre, adgangskoder
+            eller andre følsomme oplysninger.
+          </p>
+        </section>
+
+        {loading && (
+          <div className="loading-card" role="status">
+            <div className="spinner" aria-hidden="true" />
+            <div>
+              <strong>Vi gennemgår din besked</strong>
+              <p>Din vurdering er på vej...</p>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="error-card" role="alert">
+            {error}
+          </div>
+        )}
+
+        {analysis && (
+          <section className="results" aria-label="Resultat af SMS-analyse">
+            <div className="results-heading">
+              <h2>Din vurdering</h2>
+              <p>Her er, hvad FupTjek har fundet.</p>
+            </div>
+
+            <article className="result-card">
+              <div className={`risk-banner risk-${analysis.riskLevel}`}>
+                <div className="risk-symbol" aria-hidden="true">
+                  {analysis.riskLevel === 'high'
+                    ? '!'
+                    : analysis.riskLevel === 'caution'
+                      ? '!'
+                      : '?'}
+                </div>
+
+                <div>
+                  <span className="risk-label">VURDERING</span>
+                  <h3>{riskTitle(analysis.riskLevel)}</h3>
+                  <p>{analysis.summary}</p>
+                </div>
+              </div>
+
+              {analysis.warningSigns.length > 0 && (
+                <div className="result-section">
+                  <h3>Hvorfor er beskeden mistænkelig?</h3>
+
+                  <div className="warning-list">
+                    {analysis.warningSigns.slice(0, 3).map((sign, index) => (
+                      <div className="warning-item" key={index}>
+                        <span className="warning-dot" aria-hidden="true" />
+
+                        <div>
+                          <h4>{sign.title}</h4>
+
+                          {sign.evidence && (
+                            <p className="evidence">
+                              Fra SMS'en: "{sign.evidence}"
+                            </p>
+                          )}
+
+                          <p>{sign.explanation}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {hasScamType && (
+                <div className="result-section">
+                  <h3>Hvilken slags svindel kan det være?</h3>
+
+                  <div className="scam-type-box">
+                    <strong>{analysis.scamType.name}</strong>
+                    <p>{analysis.scamType.explanation}</p>
+                  </div>
+                </div>
+              )}
+
+              <div className="result-section">
+                <h3>Hvad skal du gøre?</h3>
+
+                <ol className="action-list">
+                  {analysis.actionSteps.slice(0, 3).map((step, index) => (
+                    <li key={index}>
+                      <span className="step-number" aria-hidden="true">
+                        {index + 1}
+                      </span>
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <div className="help-section">
+                <button
+                  className="help-button"
+                  type="button"
+                  aria-expanded={showHelp}
+                  onClick={() => setShowHelp(!showHelp)}
+                >
+                  <span>Har du allerede klikket eller betalt?</span>
+                  <span aria-hidden="true">{showHelp ? '−' : '+'}</span>
+                </button>
+
+                {showHelp && (
+                  <div className="help-content">
+                    <h3>Vi hjælper dig videre</h3>
+                    <p>{analysis.helpAdvice}</p>
+                  </div>
+                )}
+              </div>
+            </article>
+          </section>
+        )}
+      </main>
+
+      <footer className="site-footer">
+        <div className="container footer-inner">
+          <strong>FupTjek</strong>
+          <p>
+            FupTjek giver vejledende AI-vurderinger.
+            Vi kan ikke garantere, om en besked er sikker eller svindel.
+          </p>
+        </div>
+      </footer>
+    </div>
   )
 }
 
