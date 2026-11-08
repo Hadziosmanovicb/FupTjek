@@ -180,7 +180,19 @@ REGLER:
           throw new Error('AI-analysen blev ikke færdig')
         }
 
-        const result = JSON.parse(response.output_text)
+        
+const result = JSON.parse(response.output_text)
+
+// Kontrollér at AI'ens citater findes i den originale SMS
+for (const sign of result.warningSigns) {
+  if (
+    typeof sign.evidence !== 'string' ||
+    !sms.includes(sign.evidence)
+  ) {
+    sign.evidence = ''
+  }
+}
+
 
         res.writeHead(200, {
           'Content-Type': 'application/json; charset=utf-8',
