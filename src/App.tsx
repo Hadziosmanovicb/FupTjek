@@ -42,7 +42,7 @@ const [sources, setSources] = useState<
 
     try {
 
-const apiUrl =
+const apiUrl = //test
   import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 const response = await fetch(`${apiUrl}/analyze`, {
