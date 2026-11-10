@@ -40,6 +40,28 @@ function App() {
   const [page, setPage] = useState<Page>(getPage)
   const [menuOpen, setMenuOpen] = useState(false)
 
+const [darkMode, setDarkMode] = useState(() => {
+  const saved = localStorage.getItem('fuptjek-theme')
+
+  if (saved) return saved === 'dark'
+
+  return window.matchMedia(
+    '(prefers-color-scheme: dark)'
+  ).matches
+})
+
+useEffect(() => {
+  document.documentElement.classList.toggle(
+    'dark-mode',
+    darkMode
+  )
+
+  localStorage.setItem(
+    'fuptjek-theme',
+    darkMode ? 'dark' : 'light'
+  )
+}, [darkMode])
+
   const [message, setMessage] = useState('')
   const [analysis, setAnalysis] = useState<Analysis | null>(null)
   const [sources, setSources] = useState<Source[]>([])
@@ -190,6 +212,25 @@ function App() {
           </a>
 
           <div className="header-actions">
+            
+<button
+  type="button"
+  className="theme-toggle"
+  onClick={() => setDarkMode(!darkMode)}
+  aria-label={
+    darkMode
+      ? 'Skift til lyst tema'
+      : 'Skift til mørkt tema'
+  }
+  title={
+    darkMode
+      ? 'Skift til lyst tema'
+      : 'Skift til mørkt tema'
+  }
+>
+  {darkMode ? '☀️' : '🌙'}
+</button>
+
             <span className="header-label">
               Din digitale svindelhjælper
             </span>

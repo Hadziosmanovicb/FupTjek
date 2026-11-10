@@ -962,3 +962,251 @@ textarea:focus-visible {
     font-size: 27px;
   }
 }
+
+/* ===================================
+   FUPTJEK DARK MODE
+   =================================== */
+
+/* Tema-switch */
+
+.theme-toggle {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  border-radius: 12px;
+  border: 1px solid #dce6ec;
+  background: #ffffff;
+  font-size: 20px;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s,
+    transform 0.2s;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  background: #edf7f2;
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid #6cbfa5;
+  outline-offset: 3px;
+}
+
+/* Generelle farver */
+
+html.dark-mode {
+  color-scheme: dark;
+  background: #0b1220;
+}
+
+html.dark-mode body,
+html.dark-mode #root,
+html.dark-mode .site {
+  background: #0b1220 !important;
+  color: #e5edf5;
+}
+
+/* Header */
+
+html.dark-mode .site-header {
+  background: #111c2c !important;
+  border-color: #26374b !important;
+}
+
+html.dark-mode .brand,
+html.dark-mode .brand-link,
+html.dark-mode .header-label {
+  color: #e5edf5 !important;
+}
+
+html.dark-mode .theme-toggle,
+html.dark-mode .menu-button {
+  background: #1b2b3e !important;
+  color: #e5edf5 !important;
+  border-color: #34475c !important;
+}
+
+html.dark-mode .theme-toggle:hover,
+html.dark-mode .menu-button:hover {
+  background: #294158 !important;
+}
+
+html.dark-mode .menu-dropdown {
+  background: #172537 !important;
+  border-color: #34475c !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+html.dark-mode .menu-dropdown a {
+  color: #e5edf5 !important;
+}
+
+html.dark-mode .menu-dropdown a:hover {
+  background: #263c4c !important;
+  color: #72ddb4 !important;
+}
+
+/* Forside */
+
+html.dark-mode .hero h1,
+html.dark-mode .results-heading h2,
+html.dark-mode .input-label,
+html.dark-mode .loading-card strong {
+  color: #f1f6fb !important;
+}
+
+html.dark-mode .hero p,
+html.dark-mode .results-heading p,
+html.dark-mode .input-hint,
+html.dark-mode .character-count {
+  color: #aebed0 !important;
+}
+
+/* Kort og formular */
+
+html.dark-mode .input-card,
+html.dark-mode .result-card,
+html.dark-mode .loading-card,
+html.dark-mode .error-card,
+html.dark-mode .legal-page-card {
+  background: #152234 !important;
+  border-color: #2b4055 !important;
+  color: #e5edf5 !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+}
+
+html.dark-mode textarea,
+html.dark-mode input,
+html.dark-mode select {
+  background: #0e1929 !important;
+  color: #f1f6fb !important;
+  border-color: #34475c !important;
+}
+
+html.dark-mode textarea::placeholder,
+html.dark-mode input::placeholder {
+  color: #8397ac !important;
+}
+
+html.dark-mode textarea:focus,
+html.dark-mode input:focus {
+  border-color: #49b58e !important;
+  outline-color: #49b58e;
+}
+
+/* AI-resultater */
+
+html.dark-mode .result-section {
+  border-color: #2b4055 !important;
+}
+
+html.dark-mode .result-section h3,
+html.dark-mode .result-section h4,
+html.dark-mode .warning-item h4,
+html.dark-mode .scam-type-box strong {
+  color: #f1f6fb !important;
+}
+
+html.dark-mode .result-section p,
+html.dark-mode .warning-item p,
+html.dark-mode .action-list,
+html.dark-mode .help-content p {
+  color: #bfccda !important;
+}
+
+html.dark-mode .scam-type-box,
+html.dark-mode .help-content,
+html.dark-mode .privacy-notice {
+  background: #1c3040 !important;
+  border-color: #344e60 !important;
+  color: #e5edf5 !important;
+}
+
+html.dark-mode .help-button {
+  background: #1b2b3e !important;
+  color: #e5edf5 !important;
+  border-color: #34475c !important;
+}
+
+/* Risikobannere */
+
+html.dark-mode .risk-high {
+  background: #43202b !important;
+  color: #ffd9df !important;
+}
+
+html.dark-mode .risk-caution {
+  background: #44351c !important;
+  color: #ffe5a8 !important;
+}
+
+html.dark-mode .risk-uncertain {
+  background: #20344a !important;
+  color: #d3e6ff !important;
+}
+
+html.dark-mode .risk-banner h3,
+html.dark-mode .risk-banner p,
+html.dark-mode .risk-banner .risk-label {
+  color: inherit !important;
+}
+
+/* Links */
+
+html.dark-mode .privacy-notice a,
+html.dark-mode .source-list a,
+html.dark-mode .back-link,
+html.dark-mode .legal-page-card a:not(.contact-email),
+html.dark-mode .footer-links a {
+  color: #71ddb1 !important;
+}
+
+/* Privatlivspolitik og kontakt */
+
+html.dark-mode .legal-page-card h1,
+html.dark-mode .legal-page-card h2 {
+  color: #f1f6fb !important;
+}
+
+html.dark-mode .legal-page-card p {
+  color: #bfccda !important;
+}
+
+html.dark-mode .contact-email {
+  background: #168564 !important;
+  color: #ffffff !important;
+}
+
+/* Footer */
+
+html.dark-mode .site-footer {
+  background: #101b2b !important;
+  border-color: #26374b !important;
+}
+
+html.dark-mode .site-footer strong {
+  color: #f1f6fb !important;
+}
+
+html.dark-mode .site-footer p {
+  color: #aebed0 !important;
+}
+
+/* Mobil */
+
+@media (max-width: 600px) {
+  .header-actions {
+    gap: 8px;
+  }
+
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+    font-size: 19px;
+  }
+}
