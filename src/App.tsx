@@ -57,9 +57,7 @@ function App() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(
-          data.error || 'Der opstod en fejl'
-        )
+        throw new Error(data.error || 'Der opstod en fejl')
       }
 
       if (!data.structuredAnalysis) {
@@ -70,9 +68,7 @@ function App() {
       setSources(data.sources ?? [])
     } catch (err) {
       console.error('Fejl ved AI-analyse:', err)
-      setError(
-        'Kunne ikke hente analysen. Prøv igen.'
-      )
+      setError('Kunne ikke hente analysen. Prøv igen.')
     } finally {
       setLoading(false)
     }
@@ -105,10 +101,7 @@ function App() {
       <header className="site-header">
         <div className="container header-inner">
           <div className="brand">
-            <div
-              className="brand-icon"
-              aria-hidden="true"
-            >
+            <div className="brand-icon" aria-hidden="true">
               <svg
                 width="26"
                 height="26"
@@ -123,7 +116,6 @@ function App() {
                 <path d="m9 12 2 2 4-4" />
               </svg>
             </div>
-
             <span>FupTjek</span>
           </div>
 
@@ -193,45 +185,31 @@ function App() {
           </button>
 
           <div className="privacy-notice">
-            <strong>Sådan bruger vi din SMS</strong>
+            <strong>Dit privatliv</strong>
             <p>
-              Når du trykker på knappen, sendes
-              beskeden til vores server og videre
-              til OpenAI for at blive analyseret.
-              Undgå CPR-numre, MitID-koder,
-              adgangskoder og følsomme oplysninger.
+              Din besked behandles af AI for at
+              give dig en vurdering. Undgå at
+              indsætte følsomme oplysninger.
             </p>
             <p>
-              Du kan læse mere i vores
-              privatlivspolitik nederst på siden.
+              Læs vores privatlivspolitik
+              nederst på siden.
             </p>
           </div>
         </section>
 
         {loading && (
-          <div
-            className="loading-card"
-            role="status"
-          >
-            <div
-              className="spinner"
-              aria-hidden="true"
-            />
-
+          <div className="loading-card" role="status">
+            <div className="spinner" aria-hidden="true" />
             <div>
-              <strong>
-                Vi gennemgår din besked
-              </strong>
+              <strong>Vi gennemgår din besked</strong>
               <p>Din vurdering er på vej...</p>
             </div>
           </div>
         )}
 
         {error && (
-          <div
-            className="error-card"
-            role="alert"
-          >
+          <div className="error-card" role="alert">
             {error}
           </div>
         )}
@@ -243,35 +221,25 @@ function App() {
           >
             <div className="results-heading">
               <h2>Din vurdering</h2>
-              <p>
-                Her er, hvad FupTjek har fundet.
-              </p>
+              <p>Her er, hvad FupTjek har fundet.</p>
             </div>
 
             <article className="result-card">
               <div
-                className={
-                  `risk-banner risk-${analysis.riskLevel}`
-                }
+                className={`risk-banner risk-${analysis.riskLevel}`}
               >
                 <div
                   className="risk-symbol"
                   aria-hidden="true"
                 >
-                  {analysis.riskLevel === 'uncertain'
-                    ? '?'
-                    : '!'}
+                  {analysis.riskLevel === 'uncertain' ? '?' : '!'}
                 </div>
 
                 <div>
                   <span className="risk-label">
                     VURDERING
                   </span>
-
-                  <h3>
-                    {riskTitle(analysis.riskLevel)}
-                  </h3>
-
+                  <h3>{riskTitle(analysis.riskLevel)}</h3>
                   <p>{analysis.summary}</p>
                 </div>
               </div>
@@ -300,14 +268,11 @@ function App() {
 
                             {sign.evidence && (
                               <p className="evidence">
-                                Fra SMS'en: "
-                                {sign.evidence}"
+                                Fra SMS'en: "{sign.evidence}"
                               </p>
                             )}
 
-                            <p>
-                              {sign.explanation}
-                            </p>
+                            <p>{sign.explanation}</p>
                           </div>
                         </div>
                       ))}
@@ -362,8 +327,8 @@ function App() {
 
                   <p>
                     FupTjek har fundet
-                    sikkerhedsviden knyttet til
-                    følgende officielle kilder:
+                    sikkerhedsviden knyttet
+                    til følgende officielle kilder:
                   </p>
 
                   <ul className="source-list">
@@ -387,9 +352,7 @@ function App() {
                   className="help-button"
                   type="button"
                   aria-expanded={showHelp}
-                  onClick={() => {
-                    setShowHelp(!showHelp)
-                  }}
+                  onClick={() => setShowHelp(!showHelp)}
                 >
                   <span>
                     Har du allerede klikket eller betalt?
@@ -417,10 +380,9 @@ function App() {
           <strong>FupTjek</strong>
 
           <p>
-            FupTjek giver vejledende
-            AI-vurderinger. Vi kan ikke
-            garantere, om en besked er
-            sikker eller svindel.
+            FupTjek giver vejledende AI-vurderinger.
+            Vi kan ikke garantere, om en besked
+            er sikker eller svindel.
           </p>
 
           <div className="legal-panels">
@@ -431,160 +393,66 @@ function App() {
               <summary>Privatlivspolitik</summary>
 
               <div className="legal-content">
-                <h3>
-                  Privatlivspolitik for FupTjek
-                </h3>
-
-                <p>
-                  FupTjek er en gratis,
-                  AI-baseret tjeneste, som
-                  hjælper brugere med at
-                  vurdere mistænkelige SMS'er.
-                </p>
+                <h3>Privatlivspolitik – FupTjek</h3>
 
                 <h4>
-                  1. Hvem står bag FupTjek?
+                  1. Hvilke oplysninger behandler vi?
                 </h4>
 
                 <p>
-                  FupTjek drives som et
-                  personligt projekt af
-                  Benjamin Hadziosmanovic.
-                </p>
-
-                <p>
-                  Kontakt:
-                  {' '}
-                  <a href="mailto:benjamin.hadziosman@gmail.com">
-                    benjamin.hadziosman@gmail.com
-                  </a>
+                  Når du bruger FupTjek,
+                  behandler vi den besked,
+                  du indsender, for at kunne
+                  give dig en AI-baseret vurdering.
+                  Der kan desuden behandles
+                  tekniske oplysninger,
+                  såsom IP-adresser,
+                  af hensyn til sikkerhed og drift.
                 </p>
 
                 <h4>
-                  2. Hvilke oplysninger behandler vi?
+                  2. Hvordan bruges oplysningerne?
                 </h4>
 
                 <p>
-                  Vi behandler den SMS-tekst,
-                  du selv indtaster, for at
-                  kunne analysere den.
-                  Teksten kan indeholde
-                  personoplysninger, hvis
-                  du vælger at indsætte dem.
-                </p>
-
-                <p>
-                  Serveren kan desuden
-                  behandle tekniske
-                  oplysninger, blandt andet
-                  IP-adresser, til sikkerhed
-                  og begrænsning af misbrug.
+                  Beskeden behandles for at
+                  levere vurderingen.
+                  Vi benytter eksterne
+                  leverandører, herunder
+                  OpenAI til AI-behandling
+                  og Render til hosting.
                 </p>
 
                 <h4>
-                  3. Hvordan bruges din SMS?
+                  3. Opbevaring og sikkerhed
                 </h4>
 
                 <p>
-                  Når du sender en SMS til
-                  analyse, går teksten fra
-                  din browser til vores
-                  backend hos Render og
-                  videre til OpenAI.
-                </p>
-
-                <p>
-                  OpenAI behandler teksten
-                  for at udarbejde en
-                  vejledende risikovurdering,
-                  forklaring og forslag
-                  til næste skridt.
-                </p>
-
-                <p>
-                  FupTjek bruger også lokalt
-                  gemte sikkerhedsnoter til
-                  at finde relevante
-                  kildehenvisninger.
+                  FupTjek gemmer ikke indsendte
+                  beskeder i sin egen database.
+                  Vores leverandører kan dog
+                  opbevare oplysninger i forbindelse
+                  med drift og sikkerhed.
                 </p>
 
                 <h4>
-                  4. Hvem modtager oplysninger?
+                  4. Dine rettigheder
                 </h4>
 
                 <p>
-                  Vi bruger Render til
-                  hosting og OpenAI til
-                  AI-analysen.
-                  Oplysninger kan blive
-                  behandlet af disse
-                  leverandører efter deres
-                  gældende vilkår.
-                </p>
-
-                <p>
-                  OpenAI bruger som
-                  udgangspunkt ikke data
-                  fra API-kald til at
-                  træne sine modeller,
-                  medmindre der særskilt
-                  er givet tilladelse.
-                </p>
-
-                <h4>
-                  5. Opbevaring
-                </h4>
-
-                <p>
-                  Den nuværende FupTjek-kode
-                  gemmer ikke dine SMS'er
-                  i en særskilt database.
-                  Oplysninger kan dog
-                  blive behandlet eller
-                  opbevaret af vores
-                  tjenesteudbydere til
-                  drift og sikkerhed.
-                </p>
-
-                <p>
-                  Derfor kan vi ikke love,
-                  at alle oplysninger
-                  slettes øjeblikkeligt,
-                  når analysen er færdig.
-                </p>
-
-                <h4>
-                  6. Dine rettigheder
-                </h4>
-
-                <p>
-                  Hvis vi behandler
-                  personoplysninger om dig,
-                  kan du efter
-                  databeskyttelsesreglerne
-                  blandt andet have ret
+                  Du kan efter GDPR have ret
                   til indsigt, rettelse,
-                  sletning, begrænsning
-                  og indsigelse.
-                  Rettighederne afhænger
-                  af situationen.
+                  sletning og begrænsning
+                  af behandlingen samt til
+                  at gøre indsigelse.
                 </p>
 
                 <p>
-                  Kontakt os på
-                  {' '}
-                  <a href="mailto:benjamin.hadziosman@gmail.com">
-                    benjamin.hadziosman@gmail.com
-                  </a>
-                  {' '}
-                  hvis du har spørgsmål
-                  eller ønsker at gøre
-                  brug af dine rettigheder.
-                </p>
-
-                <p>
-                  Du kan også klage til
-                  {' '}
+                  Du kan kontakte os ved
+                  spørgsmål eller anmodninger
+                  vedrørende dine oplysninger.
+                  Du har også ret til at
+                  klage til{' '}
                   <a
                     href="https://www.datatilsynet.dk/"
                     target="_blank"
@@ -594,23 +462,19 @@ function App() {
                   </a>.
                 </p>
 
-                <h4>
-                  7. Vigtige oplysninger
-                </h4>
+                <h4>5. Kontakt</h4>
 
                 <p>
-                  Indsæt ikke CPR-numre,
-                  adgangskoder, MitID-koder,
-                  bankoplysninger eller
-                  følsomme personoplysninger.
+                  FupTjek
                 </p>
 
                 <p>
-                  FupTjek er et uafhængigt
-                  projekt og er ikke
-                  tilknyttet MitID,
-                  Sikkerdigital eller
-                  offentlige myndigheder.
+                  E-mail:{' '}
+                  <a
+                    href="mailto:benjamin.hadziosman@gmail.com"
+                  >
+                    benjamin.hadziosman@gmail.com
+                  </a>
                 </p>
               </div>
             </details>
@@ -626,21 +490,14 @@ function App() {
 
                 <p>
                   Har du spørgsmål,
-                  oplevet en fejl eller
-                  har forslag til at
-                  forbedre FupTjek?
+                  oplever du fejl,
+                  eller har du forslag
+                  til forbedringer?
                 </p>
 
                 <p>
                   Du er velkommen til
-                  at kontakte personen
-                  bag hjemmesiden.
-                </p>
-
-                <p>
-                  <strong>
-                    Benjamin Hadziosmanovic
-                  </strong>
+                  at kontakte FupTjek.
                 </p>
 
                 <a
@@ -651,9 +508,10 @@ function App() {
                 </a>
 
                 <p>
-                  E-mail:
-                  {' '}
-                  benjamin.hadziosman@gmail.com
+                  E-mail:{' '}
+                  <a href="mailto:benjamin.hadziosman@gmail.com">
+                    benjamin.hadziosman@gmail.com
+                  </a>
                 </p>
 
                 <p className="legal-small">
