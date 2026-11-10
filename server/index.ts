@@ -419,7 +419,7 @@ SMS DER SKAL ANALYSERES:
 ${sms}
 `,
 
-      max_output_tokens: 1800,
+      max_output_tokens: 1200,
 
       text: {
         format: {
