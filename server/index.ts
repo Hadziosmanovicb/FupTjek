@@ -378,18 +378,43 @@ Giv en kort og tydelig vurdering.
 Forklar hvorfor beskeden kan være mistænkelig.
 Skeln mellem mistanke og dokumenterede forhold.
 
+
 2. SVINDELTYPE
-Identificér en mulig svindeltype, hvis der er grundlag:
-- SMS-phishing (smishing)
-- Identitetssvindel
+Identificér den mest præcise svindeltype ud fra
+beskedens konkrete indhold.
+
+Mulige svindeltyper:
+- Falsk pakkebesked
+- Bank- og betalingssvindel
+- MitID-svindel
+- Investeringssvindel
+- Kærlighedssvindel
+- Direktørsvindel
+- Jobsvindel
+- Fakturasvindel
+- Boligsvindel
+- Teknisk support-svindel
+- Konkurrencesvindel
 - Afpresning
-- Falsk betaling
+- Identitetssvindel
 - Mulig malware
 - Anden svindel
 - Ukendt eller ingen identificeret type
 
-Forklar svindeltypen med almindelige danske ord.
-En SMS alene kan ikke bevise, at et link indeholder malware.
+REGLER FOR SVINDELTYPE:
+- Vælg den mest specifikke svindeltype, når
+  beskeden indeholder tilstrækkelige tegn.
+- Brug ikke automatisk "SMS-phishing (smishing)",
+  bare fordi beskeden er en SMS.
+- Brug kun "Anden svindel", hvis ingen af
+  de mere specifikke kategorier passer.
+- Hvis der ikke er konkrete tegn på svindel,
+  skal typen være "Ukendt eller ingen identificeret type".
+- Hvis svindeltypen er usikker, skal det fremgå.
+- Forklar svindeltypen kort og på almindeligt dansk.
+- Opfind ikke oplysninger om afsender eller links.
+- En SMS alene kan ikke bevise, at et link
+  indeholder malware.
 
 3. HVAD SKAL BRUGEREN GØRE?
 Giv 1-3 konkrete handlinger.
