@@ -1,5 +1,627 @@
 
-/* PRIVATLIV VED SMS-FELTET */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'DM Sans', Arial, sans-serif;
+  color: #183047;
+  background: #f5f8fa;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  display: block;
+  background: #f5f8fa;
+  color: #183047;
+}
+
+#root {
+  width: 100%;
+  max-width: none;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+button:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #6cbfa5;
+  outline-offset: 3px;
+}
+
+.site {
+  min-height: 100vh;
+}
+
+.container {
+  width: min(100% - 40px, 780px);
+  margin: 0 auto;
+}
+
+/* HEADER */
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e4ebef;
+}
+
+.header-inner {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #17334a;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+}
+
+.brand-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: #e5f5ee;
+  color: #138060;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-label {
+  font-size: 13px;
+  color: #617788;
+  font-weight: 600;
+}
+
+/* HERO */
+
+.main-content {
+  padding-top: 64px;
+  padding-bottom: 84px;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.eyebrow {
+  display: inline-block;
+  color: #137c60;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  margin-bottom: 15px;
+}
+
+.hero h1 {
+  font-size: clamp(32px, 5vw, 46px);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  color: #17334a;
+  margin: 0 0 18px;
+}
+
+.hero p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #536b7b;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* SMS INPUT */
+
+.input-card {
+  background: #ffffff;
+  border: 1px solid #e0e8ed;
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 12px 40px rgba(26, 52, 73, 0.045);
+}
+
+.input-label {
+  display: block;
+  font-size: 19px;
+  font-weight: 800;
+  color: #183047;
+  margin-bottom: 7px;
+}
+
+.input-hint {
+  color: #647888;
+  font-size: 15px;
+  margin: 0 0 18px;
+}
+
+.input-card textarea {
+  display: block;
+  width: 100%;
+  min-height: 165px;
+  resize: vertical;
+  border-radius: 12px;
+  border: 1.5px solid #cbd9df;
+  background: #ffffff;
+  color: #183047;
+  padding: 18px;
+  font-size: 17px;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-card textarea::placeholder {
+  color: #8293a0;
+}
+
+.input-card textarea:focus {
+  border-color: #148565;
+  box-shadow: 0 0 0 4px rgba(20, 133, 101, 0.10);
+}
+
+.input-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+  margin-bottom: 18px;
+}
+
+.character-count {
+  font-size: 13px;
+  color: #768995;
+}
+
+.analyze-button {
+  display: block;
+  width: 100%;
+  min-height: 58px;
+  background: #147d60;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 800;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.analyze-button:hover:not(:disabled) {
+  background: #0d664e;
+}
+
+.analyze-button:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.analyze-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.privacy-hint {
+  font-size: 13px;
+  color: #687c89;
+  text-align: center;
+  line-height: 1.6;
+  margin: 17px 0 0;
+}
+
+/* LOADING AND ERRORS */
+
+.loading-card,
+.error-card {
+  margin-top: 24px;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.loading-card {
+  background: #ffffff;
+  border: 1px solid #deebe6;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading-card p {
+  color: #617788;
+  margin: 5px 0 0;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #dcefe8;
+  border-top-color: #147d60;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error-card {
+  background: #fff1f1;
+  border: 1px solid #f1caca;
+  color: #9c3030;
+}
+
+/* RESULTS */
+
+.results {
+  margin-top: 48px;
+}
+
+.results-heading {
+  margin-bottom: 20px;
+}
+
+.results-heading h2 {
+  font-size: 27px;
+  letter-spacing: -0.7px;
+  margin: 0 0 7px;
+  color: #17334a;
+}
+
+.results-heading p {
+  color: #647888;
+  margin: 0;
+}
+
+.result-card {
+  background: #ffffff;
+  border: 1px solid #e0e8ed;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 12px 40px rgba(26, 52, 73, 0.045);
+}
+
+/* RISK ASSESSMENT */
+
+.risk-banner {
+  padding: 24px;
+  border-radius: 14px;
+  display: flex;
+  gap: 17px;
+  align-items: flex-start;
+}
+
+.risk-high {
+  background: #fff0ed;
+  border: 1px solid #f4d0c9;
+}
+
+.risk-caution {
+  background: #fff6e9;
+  border: 1px solid #f1dfbb;
+}
+
+.risk-uncertain {
+  background: #edf4f9;
+  border: 1px solid #d6e4ee;
+}
+
+.risk-symbol {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.risk-high .risk-symbol {
+  background: #f8d5cf;
+  color: #a5372a;
+}
+
+.risk-caution .risk-symbol {
+  background: #f5dfb4;
+  color: #8b570b;
+}
+
+.risk-uncertain .risk-symbol {
+  background: #d5e6f2;
+  color: #325d80;
+}
+
+.risk-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 7px;
+  color: #607180;
+}
+
+.risk-banner h3 {
+  font-size: 21px;
+  line-height: 1.3;
+  margin: 0 0 10px;
+  color: #183047;
+}
+
+.risk-banner p {
+  color: #445968;
+  line-height: 1.65;
+  font-size: 16px;
+  margin: 0;
+}
+
+/* RESULT SECTIONS */
+
+.result-section {
+  border-bottom: 1px solid #e8edef;
+  padding: 28px 0;
+}
+
+.result-section h3 {
+  font-size: 20px;
+  line-height: 1.4;
+  margin: 0 0 18px;
+  color: #183047;
+}
+
+.warning-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.warning-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+}
+
+.warning-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #d69b45;
+  margin-top: 9px;
+  flex-shrink: 0;
+}
+
+.warning-item h4 {
+  font-size: 16px;
+  margin: 0 0 7px;
+}
+
+.warning-item p {
+  color: #586c7a;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.warning-item .evidence {
+  color: #315f79;
+  font-weight: 600;
+  margin-bottom: 6px;
+  overflow-wrap: anywhere;
+}
+
+.scam-type-box {
+  background: #f1f7f9;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.scam-type-box strong {
+  color: #176c61;
+  font-size: 17px;
+}
+
+.scam-type-box p {
+  margin: 9px 0 0;
+  line-height: 1.65;
+  color: #536b7b;
+}
+
+/* ACTION STEPS */
+
+.action-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.action-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #3c5262;
+}
+
+.step-number {
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e4f4ed;
+  color: #137b5d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* EXTRA HELP */
+
+.help-section {
+  margin-top: 25px;
+}
+
+.help-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #f0f5f7;
+  border: 1px solid #dce6ec;
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-align: left;
+  color: #234357;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.help-button:hover {
+  background: #e6f0f3;
+}
+
+.help-content {
+  margin-top: 12px;
+  background: #f7fafb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.help-content h3 {
+  font-size: 17px;
+  margin: 0 0 10px;
+}
+
+.help-content p {
+  margin: 0;
+  line-height: 1.7;
+  color: #526879;
+}
+
+/* FOOTER */
+
+.site-footer {
+  border-top: 1px solid #e0e8ed;
+  padding: 28px 0;
+  background: #ffffff;
+}
+
+.footer-inner {
+  text-align: center;
+}
+
+.footer-inner strong {
+  color: #183047;
+  font-size: 16px;
+}
+
+.footer-inner p {
+  margin: 8px auto 0;
+  max-width: 580px;
+  color: #697d8b;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .container {
+    width: min(100% - 28px, 780px);
+  }
+
+  .header-inner {
+    min-height: 72px;
+  }
+
+  .brand {
+    font-size: 23px;
+  }
+
+  .header-label {
+    display: none;
+  }
+
+  .main-content {
+    padding-top: 42px;
+    padding-bottom: 55px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .input-card,
+  .result-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .risk-banner {
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .risk-banner h3 {
+    font-size: 19px;
+  }
+
+  .results {
+    margin-top: 34px;
+  }
+
+  .result-section h3 {
+    font-size: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* =========================================
+   FUPTJEK - PRIVATLIV OG KONTAKT
+   ========================================= */
+
+/* Information under SMS-feltet */
 
 .privacy-notice {
   margin-top: 22px;
@@ -9,6 +631,7 @@
   border-radius: 14px;
   color: #253b32;
   line-height: 1.65;
+  text-align: left;
 }
 
 .privacy-notice strong {
@@ -20,9 +643,10 @@
 .privacy-notice p {
   margin: 6px 0 0;
   font-size: 14px;
+  color: #536b63;
 }
 
-/* KONTAKT OG PRIVATLIVSPOLITIK */
+/* Privatlivspolitik og kontakt i footer */
 
 .legal-panels {
   width: 100%;
@@ -43,8 +667,8 @@
   cursor: pointer;
   padding: 18px 20px;
   font-size: 15px;
-  font-weight: 650;
-  color: #193b30;
+  font-weight: 700;
+  color: #183047;
 }
 
 .legal-panel summary:hover {
@@ -58,7 +682,7 @@
 
 .legal-content {
   padding: 4px 22px 22px;
-  color: #34443d;
+  color: #344b59;
   line-height: 1.75;
   font-size: 14px;
 }
@@ -66,13 +690,13 @@
 .legal-content h3 {
   font-size: 19px;
   margin: 12px 0 16px;
-  color: #172e26;
+  color: #17334a;
 }
 
 .legal-content h4 {
   font-size: 15px;
   margin: 22px 0 6px;
-  color: #172e26;
+  color: #17334a;
 }
 
 .legal-content p {
@@ -81,7 +705,7 @@
 }
 
 .legal-content a {
-  color: #17694e;
+  color: #147d60;
   text-decoration: underline;
   overflow-wrap: anywhere;
 }
@@ -90,24 +714,40 @@
   display: inline-block;
   padding: 11px 18px;
   margin: 12px 0;
-  background: #17694e;
+  background: #147d60;
   color: #ffffff !important;
   border-radius: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-decoration: none !important;
 }
 
 .contact-email:hover {
-  background: #10523c;
+  background: #0d664e;
 }
 
 .legal-small {
   font-size: 13px;
-  color: #607268;
+  color: #647888;
 }
 
-.legal-copyright {
-  margin-top: 18px;
+.footer-inner .legal-copyright {
+  margin-top: 20px;
   font-size: 12px;
-  opacity: 0.7;
+  color: #8795a0;
+}
+
+/* Mobiltilpasning */
+
+@media (max-width: 600px) {
+  .privacy-notice {
+    padding: 16px;
+  }
+
+  .legal-panel summary {
+    padding: 16px;
+  }
+
+  .legal-content {
+    padding: 4px 16px 18px;
+  }
 }
