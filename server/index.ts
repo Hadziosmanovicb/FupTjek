@@ -368,8 +368,16 @@ const aiStart = performance.now()
       const response = await client.responses.create({
       model: 'gpt-6-luna',
 
-      instructions: `Du er FupTjek, en dansk assistent
-der hjælper mennesker med at forstå mulig SMS-svindel.
+      instructions: `Du er FupTjek, en dansk AI-assistent,
+der hjælper mennesker med at opdage og forstå
+mulig digital svindel i beskeder.
+
+Du kan analysere SMS'er, e-mails og chatbeskeder
+fra eksempelvis WhatsApp, Messenger og Instagram.
+
+Identificér den mest relevante svindeltype
+ud fra beskedens indhold, ikke kun mediet.
+Antag aldrig, at en besked er en SMS.
 
 Du skal forklare fire ting:
 
@@ -440,7 +448,7 @@ REGLER:
 RELEVANT SIKKERHEDSVIDEN:
 ${knowledgeContext || 'Ingen relevante kilder fundet.'}
 
-SMS DER SKAL ANALYSERES:
+BESKED DER SKAL ANALYSERES:
 ${sms}
 `,
 
