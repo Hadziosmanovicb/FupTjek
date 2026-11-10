@@ -1,5 +1,6 @@
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import type { MouseEvent } from 'react'
 import './App.css'
 
 type Analysis = {
@@ -24,13 +25,69 @@ type Source = {
   url: string
 }
 
+type Page = '/' | '/privatlivspolitik' | '/kontakt'
+
+function getPage(): Page {
+  const path = window.location.pathname.replace(/\/+$/, '') || '/'
+
+  if (path === '/privatlivspolitik') return '/privatlivspolitik'
+  if (path === '/kontakt') return '/kontakt'
+
+  return '/'
+}
+
 function App() {
+  const [page, setPage] = useState<Page>(getPage)
+  const [menuOpen, setMenuOpen] = useState(false)
+
   const [message, setMessage] = useState('')
   const [analysis, setAnalysis] = useState<Analysis | null>(null)
   const [sources, setSources] = useState<Source[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showHelp, setShowHelp] = useState(false)
+
+  useEffect(() => {
+    function onPopState() {
+      setPage(getPage())
+      setMenuOpen(false)
+    }
+
+    window.addEventListener('popstate', onPopState)
+
+    return () => {
+      window.removeEventListener('popstate', onPopState)
+    }
+  }, [])
+
+  useEffect(() => {
+    const title =
+      page === '/privatlivspolitik'
+        ? 'Privatlivspolitik – FupTjek'
+        : page === '/kontakt'
+          ? 'Kontakt – FupTjek'
+          : 'FupTjek – Din digitale svindelhjælper'
+
+    document.title = title
+  }, [page])
+
+  function navigate(path: Page) {
+    if (window.location.pathname !== path) {
+      window.history.pushState(null, '', path)
+    }
+
+    setPage(path)
+    setMenuOpen(false)
+    window.scrollTo(0, 0)
+  }
+
+  function handleNavigation(
+    event: MouseEvent<HTMLAnchorElement>,
+    path: Page
+  ) {
+    event.preventDefault()
+    navigate(path)
+  }
 
   async function handleCheck() {
     if (!message.trim() || loading) return
@@ -67,7 +124,11 @@ function App() {
       setAnalysis(data.structuredAnalysis)
       setSources(data.sources ?? [])
     } catch (err) {
-      console.error('Fejl ved AI-analyse:', err)
+      console.error(
+        'Fejl ved AI-analyse:',
+        err instanceof Error ? err.name : 'Ukendt fejl'
+      )
+
       setError('Kunne ikke hente analysen. Prøv igen.')
     } finally {
       setLoading(false)
@@ -98,9 +159,17 @@ function App() {
 
   return (
     <div className="site">
+      {/* HEADER */}
+
       <header className="site-header">
         <div className="container header-inner">
-          <div className="brand">
+          <a
+            href="/"
+            className="brand brand-link"
+            onClick={(event) =>
+              handleNavigation(event, '/')
+            }
+          >
             <div className="brand-icon" aria-hidden="true">
               <svg
                 width="26"
@@ -116,264 +185,505 @@ function App() {
                 <path d="m9 12 2 2 4-4" />
               </svg>
             </div>
-            <span>FupTjek</span>
-          </div>
 
-          <span className="header-label">
-            Din digitale svindelhjælper
-          </span>
+            <span>FupTjek</span>
+          </a>
+
+          <div className="header-actions">
+            <span className="header-label">
+              Din digitale svindelhjælper
+            </span>
+
+            <div className="menu-container">
+              <button
+                type="button"
+                className="menu-button"
+                aria-expanded={menuOpen}
+                aria-controls="fuptjek-menu"
+                onClick={() => setMenuOpen(!menuOpen)}
+              >
+                <span aria-hidden="true">☰</span>
+                Menu
+              </button>
+
+              {menuOpen && (
+                <nav
+                  id="fuptjek-menu"
+                  className="menu-dropdown"
+                  aria-label="Hovedmenu"
+                >
+                  <a
+                    href="/"
+                    onClick={(event) =>
+                      handleNavigation(event, '/')
+                    }
+                  >
+                    Forside
+                  </a>
+
+                  <a
+                    href="/privatlivspolitik"
+                    onClick={(event) =>
+                      handleNavigation(
+                        event,
+                        '/privatlivspolitik'
+                      )
+                    }
+                  >
+                    Privatlivspolitik
+                  </a>
+
+                  <a
+                    href="/kontakt"
+                    onClick={(event) =>
+                      handleNavigation(event, '/kontakt')
+                    }
+                  >
+                    Kontakt
+                  </a>
+                </nav>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
-      <main className="container main-content">
-        <section className="hero">
-          <span className="eyebrow">
-            TRYGHED STARTER MED ET TJEK
-          </span>
+      {/* FORSIDE */}
 
-          <h1>Er den besked ægte?</h1>
-
-          <p>
-            Modtaget en besked, du er i tvivl om?
-            Vi hjælper dig med at forstå beskeden
-            og finde ud af, hvad du skal gøre.
-          </p>
-        </section>
-
-        <section className="input-card">
-          <label
-            htmlFor="besked-message"
-            className="input-label"
-          >
-           Indsæt en SMS, e-mail eller chatbesked, du er i tvivl om...
-          </label>
-
-          <p className="input-hint">
-            Kopiér beskeden ind i feltet nedenfor.
-          </p>
-
-          <textarea
-            id="besked-message"
-            placeholder="Eksempel: Din pakke er tilbageholdt. Betal 45 kr. inden 24 timer..."
-            rows={6}
-            maxLength={5000}
-            value={message}
-            onChange={(event) => {
-              setMessage(event.target.value)
-              setAnalysis(null)
-              setSources([])
-              setError('')
-              setShowHelp(false)
-            }}
-          />
-
-          <div className="input-footer">
-            <span className="character-count">
-              {message.length} / 5000 tegn
+      {page === '/' && (
+        <main className="container main-content">
+          <section className="hero">
+            <span className="eyebrow">
+              TRYGHED STARTER MED ET TJEK
             </span>
-          </div>
 
-          <button
-            className="analyze-button"
-            type="button"
-            onClick={handleCheck}
-            disabled={loading || !message.trim()}
-          >
-            {loading
-              ? 'Analyserer din besked...'
-              : 'Tjek min besked'}
-          </button>
+            <h1>Er den besked ægte?</h1>
 
-          <div className="privacy-notice">
-            <strong>Dit privatliv</strong>
             <p>
-              Din besked behandles af AI for at
-              give dig en vurdering. Undgå at
-              indsætte følsomme oplysninger.
+              Modtaget en besked, du er i tvivl om?
+              Vi hjælper dig med at forstå beskeden
+              og finde ud af, hvad du skal gøre.
             </p>
-            <p>
-              Læs vores privatlivspolitik
-              nederst på siden.
+          </section>
+
+          <section className="input-card">
+            <label
+              htmlFor="message-input"
+              className="input-label"
+            >
+              Indsæt din besked her
+            </label>
+
+            <p className="input-hint">
+              Indsæt en SMS, e-mail eller chatbesked nedenfor.
             </p>
-          </div>
-        </section>
 
-        {loading && (
-          <div className="loading-card" role="status">
-            <div className="spinner" aria-hidden="true" />
-            <div>
-              <strong>Vi gennemgår din besked</strong>
-              <p>Din vurdering er på vej...</p>
-            </div>
-          </div>
-        )}
+            <textarea
+              id="message-input"
+              placeholder="Indsæt den besked, du er i tvivl om..."
+              rows={6}
+              maxLength={5000}
+              value={message}
+              onChange={(event) => {
+                setMessage(event.target.value)
+                setAnalysis(null)
+                setSources([])
+                setError('')
+                setShowHelp(false)
+              }}
+            />
 
-        {error && (
-          <div className="error-card" role="alert">
-            {error}
-          </div>
-        )}
-
-        {analysis && (
-          <section
-            className="results"
-            aria-label="Resultat af besked-analyse"
-          >
-            <div className="results-heading">
-              <h2>Din vurdering</h2>
-              <p>Her er, hvad FupTjek har fundet.</p>
+            <div className="input-footer">
+              <span className="character-count">
+                {message.length} / 5000 tegn
+              </span>
             </div>
 
-            <article className="result-card">
+            <button
+              className="analyze-button"
+              type="button"
+              onClick={handleCheck}
+              disabled={loading || !message.trim()}
+            >
+              {loading
+                ? 'Analyserer din besked...'
+                : 'Tjek min besked'}
+            </button>
+
+            <div className="privacy-notice">
+              <strong>Dit privatliv</strong>
+
+              <p>
+                Din besked behandles af AI for at give
+                dig en vurdering. Undgå at indsætte
+                følsomme oplysninger.
+              </p>
+
+              <p>
+                <a
+                  href="/privatlivspolitik"
+                  onClick={(event) =>
+                    handleNavigation(
+                      event,
+                      '/privatlivspolitik'
+                    )
+                  }
+                >
+                  Læs vores privatlivspolitik
+                </a>
+              </p>
+            </div>
+          </section>
+
+          {loading && (
+            <div className="loading-card" role="status">
               <div
-                className={`risk-banner risk-${analysis.riskLevel}`}
-              >
+                className="spinner"
+                aria-hidden="true"
+              />
+
+              <div>
+                <strong>Vi gennemgår din besked</strong>
+                <p>Din vurdering er på vej...</p>
+              </div>
+            </div>
+          )}
+
+          {error && (
+            <div className="error-card" role="alert">
+              {error}
+            </div>
+          )}
+
+          {analysis && (
+            <section
+              className="results"
+              aria-label="Resultat af beskedanalysen"
+            >
+              <div className="results-heading">
+                <h2>Din vurdering</h2>
+                <p>Her er, hvad FupTjek har fundet.</p>
+              </div>
+
+              <article className="result-card">
                 <div
-                  className="risk-symbol"
-                  aria-hidden="true"
+                  className={
+                    `risk-banner risk-${analysis.riskLevel}`
+                  }
                 >
-                  {analysis.riskLevel === 'uncertain' ? '?' : '!'}
+                  <div
+                    className="risk-symbol"
+                    aria-hidden="true"
+                  >
+                    {analysis.riskLevel === 'uncertain'
+                      ? '?'
+                      : '!'}
+                  </div>
+
+                  <div>
+                    <span className="risk-label">
+                      VURDERING
+                    </span>
+
+                    <h3>
+                      {riskTitle(analysis.riskLevel)}
+                    </h3>
+
+                    <p>{analysis.summary}</p>
+                  </div>
                 </div>
 
-                <div>
-                  <span className="risk-label">
-                    VURDERING
-                  </span>
-                  <h3>{riskTitle(analysis.riskLevel)}</h3>
-                  <p>{analysis.summary}</p>
-                </div>
-              </div>
+                {analysis.warningSigns.length > 0 && (
+                  <div className="result-section">
+                    <h3>
+                      Hvorfor skal du være forsigtig?
+                    </h3>
 
-              {analysis.warningSigns.length > 0 && (
-                <div className="result-section">
-                  <h3>
-                    Hvorfor er beskeden mistænkelig?
-                  </h3>
+                    <div className="warning-list">
+                      {analysis.warningSigns
+                        .slice(0, 3)
+                        .map((sign, index) => (
+                          <div
+                            className="warning-item"
+                            key={index}
+                          >
+                            <span
+                              className="warning-dot"
+                              aria-hidden="true"
+                            />
 
-                  <div className="warning-list">
-                    {analysis.warningSigns
-                      .slice(0, 3)
-                      .map((sign, index) => (
-                        <div
-                          className="warning-item"
-                          key={index}
-                        >
-                          <span
-                            className="warning-dot"
-                            aria-hidden="true"
-                          />
+                            <div>
+                              <h4>{sign.title}</h4>
 
-                          <div>
-                            <h4>{sign.title}</h4>
+                              {sign.evidence && (
+                                <p className="evidence">
+                                  Fra beskeden: "
+                                  {sign.evidence}"
+                                </p>
+                              )}
 
-                            {sign.evidence && (
-                              <p className="evidence">
-                                Fra besked'en: "{sign.evidence}"
+                              <p>
+                                {sign.explanation}
                               </p>
-                            )}
-
-                            <p>{sign.explanation}</p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-
-              {hasScamType && (
-                <div className="result-section">
-                  <h3>
-                    Hvilken slags svindel kan det være?
-                  </h3>
-
-                  <div className="scam-type-box">
-                    <strong>
-                      {analysis.scamType.name}
-                    </strong>
-
-                    <p>
-                      {analysis.scamType.explanation}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              <div className="result-section">
-                <h3>Hvad skal du gøre?</h3>
-
-                <ol className="action-list">
-                  {analysis.actionSteps
-                    .slice(0, 3)
-                    .map((step, index) => (
-                      <li key={index}>
-                        <span
-                          className="step-number"
-                          aria-hidden="true"
-                        >
-                          {index + 1}
-                        </span>
-
-                        <span>{step}</span>
-                      </li>
-                    ))}
-                </ol>
-              </div>
-
-              {sources.length > 0 && (
-                <div className="result-section">
-                  <h3>
-                    Relateret officiel vejledning
-                  </h3>
-
-                  <p>
-                    FupTjek har fundet
-                    sikkerhedsviden knyttet
-                    til følgende officielle kilder:
-                  </p>
-
-                  <ul className="source-list">
-                    {sources.map((source) => (
-                      <li key={source.url}>
-                        <a
-                          href={source.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {source.title} ↗
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <div className="help-section">
-                <button
-                  className="help-button"
-                  type="button"
-                  aria-expanded={showHelp}
-                  onClick={() => setShowHelp(!showHelp)}
-                >
-                  <span>
-                    Har du allerede klikket eller betalt?
-                  </span>
-
-                  <span aria-hidden="true">
-                    {showHelp ? '−' : '+'}
-                  </span>
-                </button>
-
-                {showHelp && (
-                  <div className="help-content">
-                    <h3>Vi hjælper dig videre</h3>
-                    <p>{analysis.helpAdvice}</p>
+                        ))}
+                    </div>
                   </div>
                 )}
-              </div>
-            </article>
-          </section>
-        )}
-      </main>
+
+                {hasScamType && (
+                  <div className="result-section">
+                    <h3>
+                      Hvilken slags svindel kan det være?
+                    </h3>
+
+                    <div className="scam-type-box">
+                      <strong>
+                        {analysis.scamType.name}
+                      </strong>
+
+                      <p>
+                        {analysis.scamType.explanation}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="result-section">
+                  <h3>Hvad skal du gøre?</h3>
+
+                  <ol className="action-list">
+                    {analysis.actionSteps
+                      .slice(0, 3)
+                      .map((step, index) => (
+                        <li key={index}>
+                          <span
+                            className="step-number"
+                            aria-hidden="true"
+                          >
+                            {index + 1}
+                          </span>
+
+                          <span>{step}</span>
+                        </li>
+                      ))}
+                  </ol>
+                </div>
+
+                {sources.length > 0 && (
+                  <div className="result-section">
+                    <h3>Læs mere hos officielle kilder</h3>
+
+                    <ul className="source-list">
+                      {sources.map((source) => (
+                        <li key={source.url}>
+                          <a
+                            href={source.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {source.title} ↗
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <div className="help-section">
+                  <button
+                    className="help-button"
+                    type="button"
+                    aria-expanded={showHelp}
+                    onClick={() => setShowHelp(!showHelp)}
+                  >
+                    <span>
+                      Har du allerede klikket eller betalt?
+                    </span>
+
+                    <span aria-hidden="true">
+                      {showHelp ? '−' : '+'}
+                    </span>
+                  </button>
+
+                  {showHelp && (
+                    <div className="help-content">
+                      <h3>Vi hjælper dig videre</h3>
+                      <p>{analysis.helpAdvice}</p>
+                    </div>
+                  )}
+                </div>
+              </article>
+            </section>
+          )}
+        </main>
+      )}
+
+      {/* PRIVATLIVSPOLITIK */}
+
+      {page === '/privatlivspolitik' && (
+        <main className="container legal-page">
+          <a
+            href="/"
+            className="back-link"
+            onClick={(event) =>
+              handleNavigation(event, '/')
+            }
+          >
+            ← Tilbage til forsiden
+          </a>
+
+          <article className="legal-page-card">
+            <h1>Privatlivspolitik</h1>
+
+            <p>
+              Her kan du læse, hvordan FupTjek
+              behandler oplysninger, når du
+              bruger hjemmesiden.
+            </p>
+
+            <h2>1. Hvilke oplysninger behandler vi?</h2>
+
+            <p>
+              Når du bruger FupTjek, behandler vi
+              den besked, du indsender, for at
+              kunne give dig en AI-baseret vurdering.
+              Der kan desuden behandles tekniske
+              oplysninger, såsom IP-adresser,
+              af hensyn til sikkerhed og drift.
+            </p>
+
+            <h2>2. Hvordan bruges oplysningerne?</h2>
+
+            <p>
+              Den indsendte tekst behandles for
+              at levere vurderingen. Vi benytter
+              OpenAI til AI-behandling og Render
+              til hosting.
+            </p>
+
+            <h2>3. Opbevaring</h2>
+
+            <p>
+              FupTjek gemmer ikke indsendte
+              beskeder i sin egen database.
+              Vores leverandører kan dog
+              opbevare oplysninger i forbindelse
+              med drift og sikkerhed.
+            </p>
+
+            <h2>4. Besøgsstatistik</h2>
+
+            <p>
+              Vi bruger Umami Analytics til at
+              måle besøg på hjemmesiden,
+              eksempelvis antal besøgende
+              og omtrentlige geografiske
+              oplysninger. Vi sender ikke
+              indholdet af dine beskeder
+              til Umami.
+            </p>
+
+            <h2>5. Annoncer</h2>
+
+            <p>
+              FupTjek har ansøgt om Google AdSense.
+              Annoncer er ikke aktiveret endnu.
+              Hvis vi aktiverer annoncer,
+              opdaterer vi oplysningerne om
+              annoncebehandling og samtykke.
+            </p>
+
+            <h2>6. Dine rettigheder</h2>
+
+            <p>
+              Du kan efter GDPR have ret til
+              indsigt, rettelse, sletning,
+              begrænsning af behandlingen
+              og indsigelse.
+            </p>
+
+            <p>
+              Du kan kontakte os ved spørgsmål
+              om dine oplysninger. Du kan
+              også klage til{' '}
+              <a
+                href="https://www.datatilsynet.dk/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Datatilsynet
+              </a>.
+            </p>
+
+            <h2>7. Kontakt</h2>
+
+            <p>
+              FupTjek
+            </p>
+
+            <p>
+              E-mail:{' '}
+              <a href="mailto:benjamin.hadziosman@gmail.com">
+                benjamin.hadziosman@gmail.com
+              </a>
+            </p>
+          </article>
+        </main>
+      )}
+
+      {/* KONTAKT */}
+
+      {page === '/kontakt' && (
+        <main className="container legal-page">
+          <a
+            href="/"
+            className="back-link"
+            onClick={(event) =>
+              handleNavigation(event, '/')
+            }
+          >
+            ← Tilbage til forsiden
+          </a>
+
+          <article className="legal-page-card contact-page">
+            <h1>Kontakt FupTjek</h1>
+
+            <p>
+              Har du spørgsmål, oplever du en
+              fejl, eller har du forslag til
+              forbedringer?
+            </p>
+
+            <p>
+              Du er altid velkommen til
+              at kontakte FupTjek.
+            </p>
+
+            <a
+              className="contact-email"
+              href="mailto:benjamin.hadziosman@gmail.com?subject=Kontakt%20FupTjek"
+            >
+              Send en e-mail
+            </a>
+
+            <p>
+              <a href="mailto:benjamin.hadziosman@gmail.com">
+                benjamin.hadziosman@gmail.com
+              </a>
+            </p>
+
+            <p className="legal-small">
+              Send ikke CPR-numre, MitID-koder,
+              adgangskoder eller andre
+              følsomme oplysninger via e-mail.
+            </p>
+          </article>
+        </main>
+      )}
+
+      {/* FOOTER */}
 
       <footer className="site-footer">
         <div className="container footer-inner">
@@ -385,144 +695,31 @@ function App() {
             er sikker eller svindel.
           </p>
 
-          <div className="legal-panels">
-            <details
-              className="legal-panel"
-              id="privacy-policy"
+          <nav
+            className="footer-links"
+            aria-label="Information"
+          >
+            <a
+              href="/privatlivspolitik"
+              onClick={(event) =>
+                handleNavigation(
+                  event,
+                  '/privatlivspolitik'
+                )
+              }
             >
-              <summary>Privatlivspolitik</summary>
+              Privatlivspolitik
+            </a>
 
-              <div className="legal-content">
-                <h3>Privatlivspolitik – FupTjek</h3>
-
-                <h4>
-                  1. Hvilke oplysninger behandler vi?
-                </h4>
-
-                <p>
-                  Når du bruger FupTjek,
-                  behandler vi den besked,
-                  du indsender, for at kunne
-                  give dig en AI-baseret vurdering.
-                  Der kan desuden behandles
-                  tekniske oplysninger,
-                  såsom IP-adresser,
-                  af hensyn til sikkerhed og drift.
-                </p>
-
-                <h4>
-                  2. Hvordan bruges oplysningerne?
-                </h4>
-
-                <p>
-                  Beskeden behandles for at
-                  levere vurderingen.
-                  Vi benytter eksterne
-                  leverandører, herunder
-                  OpenAI til AI-behandling
-                  og Render til hosting.
-                </p>
-
-                <h4>
-                  3. Opbevaring og sikkerhed
-                </h4>
-
-                <p>
-                  FupTjek gemmer ikke indsendte
-                  beskeder i sin egen database.
-                  Vores leverandører kan dog
-                  opbevare oplysninger i forbindelse
-                  med drift og sikkerhed.
-                </p>
-
-                <h4>
-                  4. Dine rettigheder
-                </h4>
-
-                <p>
-                  Du kan efter GDPR have ret
-                  til indsigt, rettelse,
-                  sletning og begrænsning
-                  af behandlingen samt til
-                  at gøre indsigelse.
-                </p>
-
-                <p>
-                  Du kan kontakte os ved
-                  spørgsmål eller anmodninger
-                  vedrørende dine oplysninger.
-                  Du har også ret til at
-                  klage til{' '}
-                  <a
-                    href="https://www.datatilsynet.dk/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Datatilsynet
-                  </a>.
-                </p>
-
-                <h4>5. Kontakt</h4>
-
-                <p>
-                  FupTjek
-                </p>
-
-                <p>
-                  E-mail:{' '}
-                  <a
-                    href="mailto:benjamin.hadziosman@gmail.com"
-                  >
-                    benjamin.hadziosman@gmail.com
-                  </a>
-                </p>
-              </div>
-            </details>
-
-            <details
-              className="legal-panel"
-              id="contact"
+            <a
+              href="/kontakt"
+              onClick={(event) =>
+                handleNavigation(event, '/kontakt')
+              }
             >
-              <summary>Kontakt</summary>
-
-              <div className="legal-content">
-                <h3>Kontakt FupTjek</h3>
-
-                <p>
-                  Har du spørgsmål,
-                  oplever du fejl,
-                  eller har du forslag
-                  til forbedringer?
-                </p>
-
-                <p>
-                  Du er velkommen til
-                  at kontakte FupTjek.
-                </p>
-
-                <a
-                  className="contact-email"
-                  href="mailto:benjamin.hadziosman@gmail.com?subject=Kontakt%20FupTjek"
-                >
-                  Send en e-mail
-                </a>
-
-                <p>
-                  E-mail:{' '}
-                  <a href="mailto:benjamin.hadziosman@gmail.com">
-                    benjamin.hadziosman@gmail.com
-                  </a>
-                </p>
-
-                <p className="legal-small">
-                  Send ikke CPR-numre,
-                  MitID-koder eller andre
-                  følsomme oplysninger
-                  via e-mail.
-                </p>
-              </div>
-            </details>
-          </div>
+              Kontakt
+            </a>
+          </nav>
 
           <p className="legal-copyright">
             © {new Date().getFullYear()} FupTjek
