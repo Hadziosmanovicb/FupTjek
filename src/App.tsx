@@ -134,7 +134,7 @@ function App() {
           <h1>Er den besked ægte?</h1>
 
           <p>
-            Modtaget en SMS, du er i tvivl om?
+            Modtaget en besked, du er i tvivl om?
             Vi hjælper dig med at forstå beskeden
             og finde ud af, hvad du skal gøre.
           </p>
@@ -142,10 +142,10 @@ function App() {
 
         <section className="input-card">
           <label
-            htmlFor="sms-message"
+            htmlFor="besked-message"
             className="input-label"
           >
-            Indsæt din SMS her
+           Indsæt en SMS, e-mail eller chatbesked, du er i tvivl om...
           </label>
 
           <p className="input-hint">
@@ -153,7 +153,7 @@ function App() {
           </p>
 
           <textarea
-            id="sms-message"
+            id="besked-message"
             placeholder="Eksempel: Din pakke er tilbageholdt. Betal 45 kr. inden 24 timer..."
             rows={6}
             maxLength={5000}
@@ -217,7 +217,7 @@ function App() {
         {analysis && (
           <section
             className="results"
-            aria-label="Resultat af SMS-analyse"
+            aria-label="Resultat af besked-analyse"
           >
             <div className="results-heading">
               <h2>Din vurdering</h2>
@@ -268,7 +268,7 @@ function App() {
 
                             {sign.evidence && (
                               <p className="evidence">
-                                Fra SMS'en: "{sign.evidence}"
+                                Fra besked'en: "{sign.evidence}"
                               </p>
                             )}
 
