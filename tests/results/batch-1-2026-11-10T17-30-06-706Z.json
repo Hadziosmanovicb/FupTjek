@@ -1,0 +1,59 @@
+{
+  "createdAt": "2026-11-10T17:30:06.707Z",
+  "apiUrl": "http://localhost:3001",
+  "batch": 1,
+  "group": "02 - Andre svindeltyper",
+  "totalPlanned": 7,
+  "totalExecuted": 2,
+  "passed": 1,
+  "failed": 0,
+  "errors": 1,
+  "results": [
+    {
+      "name": "Investeringssvindel",
+      "message": "Invester 500 kr. i vores AI-kryptobot og få garanteret 5000 kr. tilbage i morgen. Overfør nu.",
+      "expected": [
+        "high"
+      ],
+      "actual": "high",
+      "status": "PASS",
+      "analysis": {
+        "riskLevel": "high",
+        "summary": "Beskeden har tydelige tegn på mulig investeringssvindel. Et løfte om at gøre 500 kr. til 5.000 kr. på én dag og en opfordring til at overføre straks er stærkt mistænkeligt. SMS'en alene beviser dog ikke, hvem afsenderen er, eller om tilbuddet er svindel.",
+        "scamType": {
+          "name": "Anden svindel – mulig investeringssvindel",
+          "explanation": "Beskeden forsøger at få dig til at overføre penge til en investering med et usædvanligt stort og garanteret afkast."
+        },
+        "warningSigns": [
+          {
+            "title": "Garanteret, meget højt afkast",
+            "evidence": "",
+            "explanation": "Investeringer indebærer risiko, og løfter om hurtigt, garanteret stort afkast er et alvorligt advarselstegn."
+          },
+          {
+            "title": "Pres for at overføre med det samme",
+            "evidence": "",
+            "explanation": "Hastværk kan få dig til at sende penge, før du når at undersøge tilbuddet."
+          }
+        ],
+        "actionSteps": [
+          "Overfør ikke penge, og svar ikke på beskeden.",
+          "Undersøg ikke tilbuddet via kontaktoplysninger eller links i beskeden. Hvis en virksomhed nævnes andre steder, så find dens officielle kontaktoplysninger selv.",
+          "Gem beskeden, og anmeld den som spam eller svindelforsøg hos dit teleselskab."
+        ],
+        "recommendation": "Behandl tilbuddet som meget mistænkeligt, og send ikke penge.",
+        "helpAdvice": "Hvis du allerede har overført penge, skal du straks kontakte din bank og bede dem forsøge at stoppe eller spore overførslen. Anmeld også hændelsen til politiet. Hvis du har delt adgangskoder, så skift dem med det samme."
+      },
+      "sources": []
+    },
+    {
+      "name": "Kærlighedssvindel",
+      "expected": [
+        "high"
+      ],
+      "status": "ERROR",
+      "httpStatus": 429,
+      "error": "For mange forespørgsler. Prøv igen om 15 minutter."
+    }
+  ]
+}

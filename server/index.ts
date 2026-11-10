@@ -18,8 +18,8 @@ const MAX_SMS_LENGTH = 5000
 const MAX_REQUEST_BYTES = 25 * 1024
 
 const RATE_LIMIT_WINDOW = 15 * 60 * 1000
-const MAX_REQUESTS_PER_IP = 10
-
+const MAX_REQUESTS_PER_IP =
+  process.env.NODE_ENV === 'production' ? 10 : 100
 const GLOBAL_LIMIT_WINDOW = 60 * 60 * 1000
 const MAX_GLOBAL_ANALYSES = 60
 
@@ -363,8 +363,9 @@ Information: ${source.knowledge}
     // ==========================================
     // OPENAI-ANALYSE
     // ==========================================
+const aiStart = performance.now()
 
-    const response = await client.responses.create({
+      const response = await client.responses.create({
       model: 'gpt-6-luna',
 
       instructions: `Du er FupTjek, en dansk assistent
@@ -496,7 +497,9 @@ ${sms}
         },
       },
     })
-
+console.log(
+  `OpenAI svartid: ${((performance.now() - aiStart) / 1000).toFixed(2)} sekunder`
+)
     if (
       response.status !== 'completed' ||
       !response.output_text
