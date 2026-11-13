@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import type { MouseEvent } from 'react'
 import './App.css'
-
+import { GuidesPage, GuidesTeaser } from './Guides'
 type Analysis = {
   riskLevel: 'high' | 'caution' | 'uncertain'
   summary: string
@@ -25,14 +25,14 @@ type Source = {
   url: string
 }
 
-type Page = '/' | '/privatlivspolitik' | '/kontakt'
+type Page = '/' | '/privatlivspolitik' | '/kontakt' | '/guider'
 
 function getPage(): Page {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
 
   if (path === '/privatlivspolitik') return '/privatlivspolitik'
   if (path === '/kontakt') return '/kontakt'
-
+if (path === '/guider') return '/guider'
   return '/'
 }
 
@@ -40,15 +40,11 @@ function App() {
   const [page, setPage] = useState<Page>(getPage)
   const [menuOpen, setMenuOpen] = useState(false)
 
+
 const [darkMode, setDarkMode] = useState(() => {
-  const saved = localStorage.getItem('fuptjek-theme')
-
-  if (saved) return saved === 'dark'
-
-  return window.matchMedia(
-    '(prefers-color-scheme: dark)'
-  ).matches
+  return localStorage.getItem('fuptjek-theme') === 'dark'
 })
+
 
 useEffect(() => {
   document.documentElement.classList.toggle(
@@ -273,7 +269,9 @@ useEffect(() => {
                   >
                     Privatlivspolitik
                   </a>
-
+<a href="/guider">
+  Lær om svindel
+</a>
                   <a
                     href="/kontakt"
                     onClick={(event) =>
@@ -558,9 +556,11 @@ useEffect(() => {
               </article>
             </section>
           )}
+              <GuidesTeaser />     
+
         </main>
       )}
-
+{page === '/guider' && <GuidesPage />}
       {/* PRIVATLIVSPOLITIK */}
 
       {page === '/privatlivspolitik' && (

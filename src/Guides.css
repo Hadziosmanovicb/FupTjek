@@ -1,0 +1,363 @@
+
+/* FupTjek - Guides */
+
+.guide-teaser {
+  margin: 65px 0 80px;
+}
+
+.guide-teaser-heading {
+  text-align: center;
+  max-width: 660px;
+  margin: 0 auto 30px;
+}
+
+.guide-eyebrow {
+  display: inline-block;
+  color: #168564;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+  margin-bottom: 12px;
+}
+
+.guide-teaser h2,
+.guides-intro h1,
+.guide-cta h2 {
+  color: #17334a;
+  margin: 0 0 14px;
+  letter-spacing: -0.6px;
+}
+
+.guide-teaser-heading p,
+.guides-intro p,
+.guide-cta p {
+  color: #607487;
+  line-height: 1.8;
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.guide-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid #dfe9eb;
+  border-radius: 18px;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.guide-card:hover {
+  transform: translateY(-3px);
+  border-color: #8bd2b6;
+  box-shadow: 0 12px 30px rgba(10, 49, 62, 0.08);
+}
+
+.guide-card:focus-visible,
+.guide-cta-button:focus-visible {
+  outline: 3px solid #45bb8e;
+  outline-offset: 3px;
+}
+
+.guide-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.guide-emoji {
+  display: grid;
+  place-items: center;
+  width: 49px;
+  height: 49px;
+  font-size: 23px;
+  border-radius: 13px;
+  background: #e8f6ef;
+}
+
+.guide-number {
+  color: #a0b0bb;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.guide-card h3 {
+  color: #17334a;
+  font-size: 17px;
+  margin: 0 0 10px;
+}
+
+.guide-card p {
+  color: #607487;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0 0 22px;
+}
+
+.guide-card-link {
+  margin-top: auto;
+  color: #168564;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+/* Guidesiden */
+
+.guides-page {
+  padding-top: 45px;
+  padding-bottom: 90px;
+}
+
+.guide-back {
+  display: inline-block;
+  color: #168564;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 30px;
+}
+
+.guides-intro {
+  max-width: 790px;
+  margin-bottom: 45px;
+}
+
+.guides-intro h1 {
+  font-size: clamp(30px, 5vw, 45px);
+  line-height: 1.2;
+}
+
+.guide-index {
+  margin-bottom: 65px;
+}
+
+.guide-index > h2 {
+  color: #17334a;
+  margin-bottom: 20px;
+}
+
+.guide-articles {
+  display: grid;
+  gap: 35px;
+}
+
+.guide-article {
+  scroll-margin-top: 35px;
+  padding: 40px;
+  border: 1px solid #dfe9eb;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.guide-article h2 {
+  color: #17334a;
+  font-size: clamp(25px, 4vw, 32px);
+  line-height: 1.25;
+  margin: 0 0 20px;
+}
+
+.guide-article h3 {
+  color: #17334a;
+  font-size: 19px;
+  margin: 32px 0 12px;
+}
+
+.guide-article p,
+.guide-article li {
+  color: #526779;
+  line-height: 1.85;
+  font-size: 15px;
+}
+
+.guide-article p {
+  margin: 0 0 16px;
+}
+
+.guide-article ol {
+  padding-left: 25px;
+}
+
+.guide-article li {
+  padding-left: 5px;
+  margin-bottom: 8px;
+}
+
+.guide-article .guide-lead {
+  font-size: 17px;
+  color: #445e70;
+}
+
+.guide-example {
+  margin: 22px 0;
+  padding: 20px 24px;
+  border-left: 4px solid #d79c37;
+  background: #fff8e9;
+  border-radius: 0 12px 12px 0;
+}
+
+.guide-example strong {
+  display: block;
+  color: #74521b;
+  margin-bottom: 8px;
+}
+
+.guide-example p {
+  margin: 0;
+  color: #684f28;
+  white-space: pre-line;
+}
+
+.guide-tip {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid #bde8d2;
+  border-radius: 13px;
+  background: #ebf8f0;
+}
+
+.guide-tip strong {
+  color: #126b51;
+}
+
+.guide-tip p {
+  color: #295e4e;
+  margin: 8px 0 0;
+}
+
+.guide-source {
+  border-top: 1px solid #e3e9ed;
+  padding-top: 20px;
+  margin-top: 30px !important;
+  font-size: 14px !important;
+}
+
+.guide-article a,
+.guide-resource-links a {
+  color: #168564;
+  overflow-wrap: anywhere;
+}
+
+.guide-resource-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 25px;
+  font-weight: 700;
+}
+
+.guide-cta {
+  text-align: center;
+  max-width: 720px;
+  margin: 65px auto 0;
+}
+
+.guide-cta-button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 14px 24px;
+  background: #168564;
+  color: #fff;
+  border-radius: 12px;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.guide-cta-button:hover {
+  background: #0e6e52;
+}
+
+/* Dark mode */
+
+html.dark-mode .guide-teaser h2,
+html.dark-mode .guides-intro h1,
+html.dark-mode .guide-index > h2,
+html.dark-mode .guide-article h2,
+html.dark-mode .guide-article h3,
+html.dark-mode .guide-cta h2,
+html.dark-mode .guide-card h3 {
+  color: #f1f6fb;
+}
+
+html.dark-mode .guide-card,
+html.dark-mode .guide-article {
+  background: #152234;
+  border-color: #2b4055;
+}
+
+html.dark-mode .guide-card p,
+html.dark-mode .guide-teaser-heading p,
+html.dark-mode .guides-intro p,
+html.dark-mode .guide-article p,
+html.dark-mode .guide-article li,
+html.dark-mode .guide-cta p {
+  color: #bfccda;
+}
+
+html.dark-mode .guide-emoji {
+  background: #253b46;
+}
+
+html.dark-mode .guide-eyebrow,
+html.dark-mode .guide-back,
+html.dark-mode .guide-card-link,
+html.dark-mode .guide-article a {
+  color: #70d9b1;
+}
+
+html.dark-mode .guide-example {
+  background: #3a3024;
+  border-color: #c69a54;
+}
+
+html.dark-mode .guide-example strong,
+html.dark-mode .guide-example p {
+  color: #f0d7a6;
+}
+
+html.dark-mode .guide-tip {
+  background: #1b382f;
+  border-color: #326650;
+}
+
+html.dark-mode .guide-tip strong,
+html.dark-mode .guide-tip p {
+  color: #b0e9cf;
+}
+
+html.dark-mode .guide-source {
+  border-color: #2b4055;
+}
+
+/* Mobil */
+
+@media (max-width: 650px) {
+  .guide-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .guide-card {
+    min-height: 190px;
+    padding: 22px;
+  }
+
+  .guide-teaser {
+    margin: 50px 0;
+  }
+
+  .guide-article {
+    padding: 24px 20px;
+  }
+
+  .guides-page {
+    padding-top: 30px;
+  }
+}
