@@ -1210,3 +1210,10 @@ html.dark-mode .site-footer p {
     font-size: 19px;
   }
 }
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
