@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import type { MouseEvent } from 'react'
 import './App.css'
 import { GuidesPage, GuidesTeaser } from './Guides'
+import { GuidesEnPage } from './GuidesEn'
 type Analysis = {
   riskLevel: 'high' | 'caution' | 'uncertain'
   summary: string
@@ -25,8 +26,12 @@ type Source = {
   url: string
 }
 
-type Page = '/' | '/privatlivspolitik' | '/kontakt' | '/guider'
-
+type Page =
+  | '/'
+  | '/privatlivspolitik'
+  | '/kontakt'
+  | '/guider'
+  | '/en/guides'
 
 function getPage(): Page {
   const path =
@@ -36,7 +41,7 @@ function getPage(): Page {
   if (path === '/privatlivspolitik') return '/privatlivspolitik'
   if (path === '/kontakt') return '/kontakt'
   if (path === '/guider') return '/guider'
-
+if (path === '/en/guides') return '/en/guides'
   return '/'
 }
 
@@ -666,6 +671,7 @@ placeholder={t.placeholder}              rows={6}
         </main>
       )}
 {page === '/guider' && <GuidesPage />}
+{page === '/en/guides' && <GuidesEnPage />}
       {/* PRIVATLIVSPOLITIK */}
 
       {page === '/privatlivspolitik' && (

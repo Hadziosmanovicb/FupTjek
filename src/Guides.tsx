@@ -70,7 +70,18 @@ function GuideCards({
       {articles.map((article, index) => (
         <a
           className="guide-card"
-          href={`/guider#${article.id}`}
+          
+href={
+  language === 'en'
+    ? `/en/guides#${[
+        'scam-texts',
+        'phishing',
+        'after-scam',
+        'scam-types',
+      ][index]}`
+    : `/guider#${article.id}`
+}
+
           key={article.id}
         >
           <div className="guide-card-top">
