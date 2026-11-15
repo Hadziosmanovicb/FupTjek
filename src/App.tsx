@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import type { MouseEvent } from 'react'
 import './App.css'
 import { GuidesPage, GuidesTeaser } from './Guides'
-import { GuidesEnPage } from './GuidesEn'
+import { GuidesEnPage } from './GuidesEnglish'
 type Analysis = {
   riskLevel: 'high' | 'caution' | 'uncertain'
   summary: string
