@@ -4,6 +4,8 @@ import type { MouseEvent } from 'react'
 import './App.css'
 import { GuidesPage, GuidesTeaser } from './Guides'
 import { GuidesEnPage } from './GuidesEnglish'
+import { ContactEnPage } from './ContactEn'
+import { PrivacyEnPage } from './PrivacyEn'
 type Analysis = {
   riskLevel: 'high' | 'caution' | 'uncertain'
   summary: string
@@ -32,6 +34,8 @@ type Page =
   | '/kontakt'
   | '/guider'
   | '/en/guides'
+  | '/en/contact'
+  | '/en/privacy'
 
 function getPage(): Page {
   const path =
@@ -42,6 +46,8 @@ function getPage(): Page {
   if (path === '/kontakt') return '/kontakt'
   if (path === '/guider') return '/guider'
 if (path === '/en/guides') return '/en/guides'
+if (path === '/en/contact') return '/en/contact'
+if (path === '/en/privacy') return '/en/privacy'
   return '/'
 }
 
@@ -672,6 +678,8 @@ placeholder={t.placeholder}              rows={6}
       )}
 {page === '/guider' && <GuidesPage />}
 {page === '/en/guides' && <GuidesEnPage />}
+{page === '/en/contact' && <ContactEnPage />}
+{page === '/en/privacy' && <PrivacyEnPage />}
       {/* PRIVATLIVSPOLITIK */}
 
       {page === '/privatlivspolitik' && (
@@ -841,36 +849,40 @@ placeholder={t.placeholder}              rows={6}
         <div className="container footer-inner">
           <strong>FupTjek</strong>
 
-          <p>
-            FupTjek giver vejledende AI-vurderinger.
-            Vi kan ikke garantere, om en besked
-            er sikker eller svindel.
-          </p>
+         
+<p>
+  {language === 'en'
+    ? 'FupTjek provides AI-assisted assessments for informational purposes. We cannot guarantee whether a message is safe or fraudulent.'
+    : 'FupTjek giver vejledende AI-vurderinger. Vi kan ikke garantere, om en besked er sikker eller svindel.'}
+</p>
+
 
           <nav
             className="footer-links"
             aria-label="Information"
-          >
-            <a
-              href="/privatlivspolitik"
-              onClick={(event) =>
-                handleNavigation(
-                  event,
-                  '/privatlivspolitik'
-                )
-              }
-            >
-              Privatlivspolitik
-            </a>
+          ><a
+  href={language === 'en' ? '/en/privacy' : '/privatlivspolitik'}
+  onClick={(event) =>
+    handleNavigation(
+      event,
+      language === 'en' ? '/en/privacy' : '/privatlivspolitik'
+    )
+  }
+>
+  {language === 'en' ? 'Privacy Policy' : 'Privatlivspolitik'}
+</a>
 
-            <a
-              href="/kontakt"
-              onClick={(event) =>
-                handleNavigation(event, '/kontakt')
-              }
-            >
-              Kontakt
-            </a>
+         <a
+  href={language === 'en' ? '/en/contact' : '/kontakt'}
+  onClick={(event) =>
+    handleNavigation(
+      event,
+      language === 'en' ? '/en/contact' : '/kontakt'
+    )
+  }
+>
+  {language === 'en' ? 'Contact' : 'Kontakt'}
+</a>
           </nav>
 
           <p className="legal-copyright">
