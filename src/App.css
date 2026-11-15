@@ -1217,3 +1217,49 @@ html.dark-mode .site-footer p {
   object-fit: contain;
   flex-shrink: 0;
 }
+
+/* FupTjek language switch */
+
+.language-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 75px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid #dce6ec;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #17334a;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.language-toggle:hover {
+  background: #edf7f2;
+}
+
+.language-toggle:focus-visible {
+  outline: 3px solid #6cbfa5;
+  outline-offset: 3px;
+}
+
+html.dark-mode .language-toggle {
+  background: #1b2b3e;
+  border-color: #34475c;
+  color: #e5edf5;
+}
+
+html.dark-mode .language-toggle:hover {
+  background: #294158;
+}
+
+@media (max-width: 600px) {
+  .language-toggle {
+    min-width: 65px;
+    height: 40px;
+    padding: 0 8px;
+    font-size: 13px;
+  }
+}

@@ -36,10 +36,38 @@ const articles = [
   },
 ]
 
-function GuideCards() {
+const englishArticles = [
+  {
+    title: 'How to Recognise Scam Text Messages',
+    description:
+      'Learn to spot fake delivery messages, suspicious links and payment requests.',
+  },
+  {
+    title: 'Phishing Emails',
+    description:
+      'Learn how to identify suspicious senders, links and attachments.',
+  },
+  {
+    title: 'What to Do If You Have Been Scammed',
+    description:
+      'Practical steps to protect your accounts, money and personal information.',
+  },
+  {
+    title: 'Common Types of Online Scams',
+    description:
+      'Learn about investment scams, fake job offers and other fraud techniques.',
+  },
+]
+
+
+function GuideCards({
+  language = 'da',
+}: {
+  language?: 'da' | 'en'
+}) {
   return (
     <div className="guide-grid">
-      {articles.map((article) => (
+      {articles.map((article, index) => (
         <a
           className="guide-card"
           href={`/guider#${article.id}`}
@@ -49,16 +77,29 @@ function GuideCards() {
             <span className="guide-emoji">
               {article.icon}
             </span>
+
             <span className="guide-number">
               {article.number}
             </span>
           </div>
 
-          <h3>{article.title}</h3>
-          <p>{article.description}</p>
+          <h3>
+            {language === 'en'
+              ? englishArticles[index].title
+              : article.title}
+          </h3>
+
+          <p>
+            {language === 'en'
+              ? englishArticles[index].description
+              : article.description}
+          </p>
 
           <span className="guide-card-link">
-            Læs guiden <span aria-hidden="true">→</span>
+            {language === 'en'
+              ? 'Read guide'
+              : 'Læs guiden'}{' '}
+            <span aria-hidden="true">→</span>
           </span>
         </a>
       ))}
@@ -66,25 +107,36 @@ function GuideCards() {
   )
 }
 
-export function GuidesTeaser() {
+export function GuidesTeaser({
+  language = 'da',
+}: {
+  language?: 'da' | 'en'
+}) {
+  const english = language === 'en'
+
   return (
     <section className="guide-teaser">
       <div className="guide-teaser-heading">
         <span className="guide-eyebrow">
-          VIDEN OG FOREBYGGELSE
+          {english
+            ? 'KNOWLEDGE AND PREVENTION'
+            : 'VIDEN OG FOREBYGGELSE'}
         </span>
 
-        <h2>Lær at genkende svindel</h2>
+        <h2>
+          {english
+            ? 'Learn to Recognise Scams'
+            : 'Lær at genkende svindel'}
+        </h2>
 
         <p>
-          Du behøver ikke vente på en mistænkelig
-          besked for at lære at beskytte dig selv.
-          Her finder du konkrete råd og eksempler
-          på digital svindel.
+          {english
+            ? 'You do not need to receive a suspicious message to learn how to protect yourself. Explore practical advice and examples of online fraud.'
+            : 'Du behøver ikke vente på en mistænkelig besked for at lære at beskytte dig selv. Her finder du konkrete råd og eksempler på digital svindel.'}
         </p>
       </div>
 
-      <GuideCards />
+      <GuideCards language={language} />
     </section>
   )
 }

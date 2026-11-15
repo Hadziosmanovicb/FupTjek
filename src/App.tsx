@@ -27,18 +27,43 @@ type Source = {
 
 type Page = '/' | '/privatlivspolitik' | '/kontakt' | '/guider'
 
-function getPage(): Page {
-  const path = window.location.pathname.replace(/\/+$/, '') || '/'
 
+function getPage(): Page {
+  const path =
+    window.location.pathname.replace(/\/+$/, '') || '/'
+
+  if (path === '/en') return '/'
   if (path === '/privatlivspolitik') return '/privatlivspolitik'
   if (path === '/kontakt') return '/kontakt'
-if (path === '/guider') return '/guider'
+  if (path === '/guider') return '/guider'
+
   return '/'
 }
+
 
 function App() {
   const [page, setPage] = useState<Page>(getPage)
   const [menuOpen, setMenuOpen] = useState(false)
+
+const [language, setLanguage] = useState<'da' | 'en'>(() => {
+  return window.location.pathname.startsWith('/en')
+    ? 'en'
+    : 'da'
+})
+
+
+function switchLanguage() {
+  const nextLanguage = language === 'da' ? 'en' : 'da'
+  const nextPath = nextLanguage === 'en' ? '/en' : '/'
+
+  setLanguage(nextLanguage)
+  setPage('/')
+  setMenuOpen(false)
+
+  window.history.pushState(null, '', nextPath)
+  window.scrollTo(0, 0)
+}
+
 
 
 const [darkMode, setDarkMode] = useState(() => {
@@ -66,10 +91,17 @@ useEffect(() => {
   const [showHelp, setShowHelp] = useState(false)
 
   useEffect(() => {
-    function onPopState() {
-      setPage(getPage())
-      setMenuOpen(false)
-    }
+    
+function onPopState() {
+  setPage(getPage())
+  setLanguage(
+    window.location.pathname.startsWith('/en')
+      ? 'en'
+      : 'da'
+  )
+  setMenuOpen(false)
+}
+
 
     window.addEventListener('popstate', onPopState)
 
@@ -126,8 +158,10 @@ useEffect(() => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message }),
-      })
+body: JSON.stringify({
+  message,
+  language,
+}),      })
 
       const data = await response.json()
 
@@ -153,27 +187,101 @@ useEffect(() => {
     }
   }
 
-  function riskTitle(level: Analysis['riskLevel']) {
-    if (level === 'high') {
-      return 'Flere alvorlige advarselstegn'
-    }
-
-    if (level === 'caution') {
-      return 'Mulige tegn på svindel'
-    }
-
-    return 'Kan ikke vurderes sikkert'
+  
+function riskTitle(level: Analysis['riskLevel']) {
+  if (language === 'en') {
+    if (level === 'high') return 'Serious warning signs'
+    if (level === 'caution') return 'Possible signs of a scam'
+    return 'Unable to assess with confidence'
   }
+
+  if (level === 'high') return 'Flere alvorlige advarselstegn'
+  if (level === 'caution') return 'Mulige tegn på svindel'
+  return 'Kan ikke vurderes sikkert'
+}
+
+
+const resultText = language === 'en'
+  ? {
+      assessment: 'ASSESSMENT',
+      warning: 'Why should you be cautious?',
+      evidence: 'From the message:',
+      scamType: 'What kind of scam could this be?',
+      actions: 'What should you do?',
+      sources: 'Read more from official sources',
+      help: 'Have you already clicked or paid?',
+      helpTitle: 'Here is what you can do next',
+    }
+  : {
+      assessment: 'VURDERING',
+      warning: 'Hvorfor skal du være forsigtig?',
+      evidence: 'Fra beskeden:',
+      scamType: 'Hvilken slags svindel kan det være?',
+      actions: 'Hvad skal du gøre?',
+      sources: 'Læs mere hos officielle kilder',
+      help: 'Har du allerede klikket eller betalt?',
+      helpTitle: 'Vi hjælper dig videre',
+    }
 
   const scamName =
     analysis?.scamType.name.toLowerCase() ?? ''
 
-  const hasScamType =
-    analysis !== null &&
-    analysis.riskLevel !== 'uncertain' &&
-    !scamName.includes('ukendt') &&
-    !scamName.includes('ingen identificeret') &&
-    !scamName.includes('ingen bestemt')
+ 
+const hasScamType =
+  analysis !== null &&
+  analysis.riskLevel !== 'uncertain' &&
+  !scamName.includes('ukendt') &&
+  !scamName.includes('ingen identificeret') &&
+  !scamName.includes('ingen bestemt') &&
+  !scamName.includes('unknown') &&
+  !scamName.includes('no identified') &&
+  !scamName.includes('not identified') &&
+  !scamName.includes('unspecified')
+
+
+const t = language === 'en'
+  ? {
+      eyebrow: 'STAY SAFE ONLINE',
+      title: 'Is this message a scam?',
+      subtitle:
+        'Received a suspicious message? We help you understand it and decide what to do next.',
+      inputLabel: 'Paste your message here',
+      inputHint:
+        'Paste an SMS, email or chat message below.',
+      placeholder:
+        'Paste the message you are unsure about...',
+      button: 'Check my message',
+      loading: 'Analysing your message...',
+      privacyTitle: 'Your privacy',
+      privacyText:
+        'Your message is processed by AI to provide an assessment. Avoid sharing sensitive personal information.',
+      privacyLink: 'Read our privacy policy',
+      loadingTitle: 'We are checking your message',
+      loadingText: 'Your assessment is on its way...',
+      resultTitle: 'Your assessment',
+      resultSubtitle: 'Here is what FupTjek found.',
+    }
+  : {
+      eyebrow: 'TRYGHED STARTER MED ET TJEK',
+      title: 'Er den besked ægte?',
+      subtitle:
+        'Modtaget en besked, du er i tvivl om? Vi hjælper dig med at forstå beskeden og finde ud af, hvad du skal gøre.',
+      inputLabel: 'Indsæt din besked her',
+      inputHint:
+        'Indsæt en SMS, e-mail eller chatbesked nedenfor.',
+      placeholder:
+        'Indsæt den besked, du er i tvivl om...',
+      button: 'Tjek min besked',
+      loading: 'Analyserer din besked...',
+      privacyTitle: 'Dit privatliv',
+      privacyText:
+        'Din besked behandles af AI for at give dig en vurdering. Undgå at indsætte følsomme oplysninger.',
+      privacyLink: 'Læs vores privatlivspolitik',
+      loadingTitle: 'Vi gennemgår din besked',
+      loadingText: 'Din vurdering er på vej...',
+      resultTitle: 'Din vurdering',
+      resultSubtitle: 'Her er, hvad FupTjek har fundet.',
+    }
 
   return (
     <div className="site">
@@ -203,6 +311,19 @@ useEffect(() => {
             
 <button
   type="button"
+  className="language-toggle"
+  onClick={switchLanguage}
+  aria-label={
+    language === 'da'
+      ? 'Switch to English'
+      : 'Skift til dansk'
+  }
+>
+  {language === 'da' ? '🇬🇧 EN' : '🇩🇰 DA'}
+</button>
+
+<button
+  type="button"
   className="theme-toggle"
   onClick={() => setDarkMode(!darkMode)}
   aria-label={
@@ -219,9 +340,11 @@ useEffect(() => {
   {darkMode ? '☀️' : '🌙'}
 </button>
 
-            <span className="header-label">
-              Din digitale svindelhjælper
-            </span>
+           <span className="header-label">
+  {language === 'en'
+    ? 'Your digital scam checker'
+    : 'Din digitale svindelhjælper'}
+</span>
 
             <div className="menu-container">
               <button
@@ -283,36 +406,35 @@ useEffect(() => {
 
       {page === '/' && (
         <main className="container main-content">
-          <section className="hero">
-            <span className="eyebrow">
-              TRYGHED STARTER MED ET TJEK
-            </span>
+          
+<section className="hero">
+  <span className="eyebrow">
+    {t.eyebrow}
+  </span>
 
-            <h1>Er den besked ægte?</h1>
+  <h1>{t.title}</h1>
 
-            <p>
-              Modtaget en besked, du er i tvivl om?
-              Vi hjælper dig med at forstå beskeden
-              og finde ud af, hvad du skal gøre.
-            </p>
-          </section>
+  <p>{t.subtitle}</p>
+</section>
+
 
           <section className="input-card">
-            <label
-              htmlFor="message-input"
-              className="input-label"
-            >
-              Indsæt din besked her
-            </label>
+           
+<label
+  htmlFor="message-input"
+  className="input-label"
+>
+  {t.inputLabel}
+</label>
 
-            <p className="input-hint">
-              Indsæt en SMS, e-mail eller chatbesked nedenfor.
-            </p>
+<p className="input-hint">
+  {t.inputHint}
+</p>
+
 
             <textarea
               id="message-input"
-              placeholder="Indsæt den besked, du er i tvivl om..."
-              rows={6}
+placeholder={t.placeholder}              rows={6}
               maxLength={5000}
               value={message}
               onChange={(event) => {
@@ -336,34 +458,27 @@ useEffect(() => {
               onClick={handleCheck}
               disabled={loading || !message.trim()}
             >
-              {loading
-                ? 'Analyserer din besked...'
-                : 'Tjek min besked'}
+            {loading ? t.loading : t.button}
             </button>
 
-            <div className="privacy-notice">
-              <strong>Dit privatliv</strong>
+           
+<div className="privacy-notice">
+  <strong>{t.privacyTitle}</strong>
 
-              <p>
-                Din besked behandles af AI for at give
-                dig en vurdering. Undgå at indsætte
-                følsomme oplysninger.
-              </p>
+  <p>{t.privacyText}</p>
 
-              <p>
-                <a
-                  href="/privatlivspolitik"
-                  onClick={(event) =>
-                    handleNavigation(
-                      event,
-                      '/privatlivspolitik'
-                    )
-                  }
-                >
-                  Læs vores privatlivspolitik
-                </a>
-              </p>
-            </div>
+  <p>
+    <a
+      href="/privatlivspolitik"
+      onClick={(event) =>
+        handleNavigation(event, '/privatlivspolitik')
+      }
+    >
+      {t.privacyLink}
+    </a>
+  </p>
+</div>
+
           </section>
 
           {loading && (
@@ -391,10 +506,12 @@ useEffect(() => {
               className="results"
               aria-label="Resultat af beskedanalysen"
             >
-              <div className="results-heading">
-                <h2>Din vurdering</h2>
-                <p>Her er, hvad FupTjek har fundet.</p>
-              </div>
+              
+<div className="results-heading">
+  <h2>{t.resultTitle}</h2>
+  <p>{t.resultSubtitle}</p>
+</div>
+
 
               <article className="result-card">
                 <div
@@ -413,8 +530,8 @@ useEffect(() => {
 
                   <div>
                     <span className="risk-label">
-                      VURDERING
-                    </span>
+  {resultText.assessment}
+</span>
 
                     <h3>
                       {riskTitle(analysis.riskLevel)}
@@ -427,7 +544,7 @@ useEffect(() => {
                 {analysis.warningSigns.length > 0 && (
                   <div className="result-section">
                     <h3>
-                      Hvorfor skal du være forsigtig?
+                      <h3>{resultText.warning}</h3>
                     </h3>
 
                     <div className="warning-list">
@@ -466,7 +583,7 @@ useEffect(() => {
                 {hasScamType && (
                   <div className="result-section">
                     <h3>
-                      Hvilken slags svindel kan det være?
+                      <h3>{resultText.scamType}</h3>
                     </h3>
 
                     <div className="scam-type-box">
@@ -482,8 +599,7 @@ useEffect(() => {
                 )}
 
                 <div className="result-section">
-                  <h3>Hvad skal du gøre?</h3>
-
+<h3>{resultText.actions}</h3>
                   <ol className="action-list">
                     {analysis.actionSteps
                       .slice(0, 3)
@@ -529,9 +645,7 @@ useEffect(() => {
                     aria-expanded={showHelp}
                     onClick={() => setShowHelp(!showHelp)}
                   >
-                    <span>
-                      Har du allerede klikket eller betalt?
-                    </span>
+                   <span>{resultText.help}</span>
 
                     <span aria-hidden="true">
                       {showHelp ? '−' : '+'}
@@ -540,7 +654,7 @@ useEffect(() => {
 
                   {showHelp && (
                     <div className="help-content">
-                      <h3>Vi hjælper dig videre</h3>
+<h3>{resultText.helpTitle}</h3>
                       <p>{analysis.helpAdvice}</p>
                     </div>
                   )}
@@ -548,8 +662,7 @@ useEffect(() => {
               </article>
             </section>
           )}
-              <GuidesTeaser />     
-
+<GuidesTeaser language={language} />
         </main>
       )}
 {page === '/guider' && <GuidesPage />}
