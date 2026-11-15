@@ -63,17 +63,40 @@ const [language, setLanguage] = useState<'da' | 'en'>(() => {
 })
 
 
+
 function switchLanguage() {
   const nextLanguage = language === 'da' ? 'en' : 'da'
-  const nextPath = nextLanguage === 'en' ? '/en' : '/'
 
-  setLanguage(nextLanguage)
-  setPage('/')
-  setMenuOpen(false)
+  let nextPath: string
+
+  if (page === '/guider' || page === '/en/guides') {
+    nextPath = nextLanguage === 'en' ? '/en/guides' : '/guider'
+  } else if (
+    page === '/privatlivspolitik' ||
+    page === '/en/privacy'
+  ) {
+    nextPath = nextLanguage === 'en'
+      ? '/en/privacy'
+      : '/privatlivspolitik'
+  } else if (
+    page === '/kontakt' ||
+    page === '/en/contact'
+  ) {
+    nextPath = nextLanguage === 'en'
+      ? '/en/contact'
+      : '/kontakt'
+  } else {
+    nextPath = nextLanguage === 'en' ? '/en' : '/'
+  }
 
   window.history.pushState(null, '', nextPath)
+
+  setLanguage(nextLanguage)
+  setPage(getPage())
+  setMenuOpen(false)
   window.scrollTo(0, 0)
 }
+
 
 
 
@@ -121,16 +144,30 @@ function onPopState() {
     }
   }, [])
 
-  useEffect(() => {
-    const title =
-      page === '/privatlivspolitik'
-        ? 'Privatlivspolitik – FupTjek'
-        : page === '/kontakt'
-          ? 'Kontakt – FupTjek'
-          : 'FupTjek – Din digitale svindelhjælper'
+ 
+useEffect(() => {
+  const titles: Record<Page, string> = {
+    '/': language === 'en'
+      ? 'FupTjek – Check Suspicious Messages for Scams'
+      : 'FupTjek – Din digitale svindelhjælper',
 
-    document.title = title
-  }, [page])
+    '/guider': 'Svindelguides – FupTjek',
+
+    '/en/guides': 'Online Scam Prevention Guides – FupTjek',
+
+    '/privatlivspolitik': 'Privatlivspolitik – FupTjek',
+
+    '/en/privacy': 'Privacy Policy – FupTjek',
+
+    '/kontakt': 'Kontakt – FupTjek',
+
+    '/en/contact': 'Contact – FupTjek',
+  }
+
+  document.title = titles[page]
+  document.documentElement.lang = language
+}, [page, language])
+
 
   function navigate(path: Page) {
     if (window.location.pathname !== path) {
@@ -177,11 +214,21 @@ body: JSON.stringify({
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Der opstod en fejl')
+        throw new Error(
+  data.error || (
+    language === 'en'
+      ? 'Something went wrong'
+      : 'Der opstod en fejl'
+  )
+)
       }
 
       if (!data.structuredAnalysis) {
-        throw new Error('AI-resultatet mangler')
+        throw new Error(
+  language === 'en'
+    ? 'The AI assessment is missing'
+    : 'AI-resultatet mangler'
+)
       }
 
       setAnalysis(data.structuredAnalysis)
@@ -192,7 +239,11 @@ body: JSON.stringify({
         err instanceof Error ? err.name : 'Ukendt fejl'
       )
 
-      setError('Kunne ikke hente analysen. Prøv igen.')
+      setError(
+  language === 'en'
+    ? 'Unable to analyse your message. Please try again.'
+    : 'Kunne ikke hente analysen. Prøv igen.'
+)
     } finally {
       setLoading(false)
     }
@@ -300,13 +351,21 @@ const t = language === 'en'
 
       <header className="site-header">
         <div className="container header-inner">
-          <a
-            href="/"
-            className="brand brand-link"
-            onClick={(event) =>
-              handleNavigation(event, '/')
-            }
-          >
+         
+<a
+  href={language === 'en' ? '/en' : '/'}
+  className="brand brand-link"
+  onClick={(event) => {
+    event.preventDefault()
+    const homePath = language === 'en' ? '/en' : '/'
+
+    window.history.pushState(null, '', homePath)
+    setPage('/')
+    setMenuOpen(false)
+    window.scrollTo(0, 0)
+  }}
+>
+
            <div className="brand-icon" aria-hidden="true">
   <img
     src="/logo.png"
@@ -369,45 +428,60 @@ const t = language === 'en'
                 Menu
               </button>
 
-              {menuOpen && (
-                <nav
-                  id="fuptjek-menu"
-                  className="menu-dropdown"
-                  aria-label="Hovedmenu"
-                >
-                  <a
-                    href="/"
-                    onClick={(event) =>
-                      handleNavigation(event, '/')
-                    }
-                  >
-                    Forside
-                  </a>
+            
+{menuOpen && (
+  <nav
+    id="fuptjek-menu"
+    className="menu-dropdown"
+    aria-label={language === 'en' ? 'Main menu' : 'Hovedmenu'}
+  >
+   
+<a
+  href={language === 'en' ? '/en' : '/'}
+  onClick={(event) => {
+    event.preventDefault()
+    const homePath = language === 'en' ? '/en' : '/'
 
-                  <a
-                    href="/privatlivspolitik"
-                    onClick={(event) =>
-                      handleNavigation(
-                        event,
-                        '/privatlivspolitik'
-                      )
-                    }
-                  >
-                    Privatlivspolitik
-                  </a>
-<a href="/guider">
-  Lær om svindel
+    window.history.pushState(null, '', homePath)
+    setPage('/')
+    setMenuOpen(false)
+    window.scrollTo(0, 0)
+  }}
+>
+  {language === 'en' ? 'Home' : 'Forside'}
 </a>
-                  <a
-                    href="/kontakt"
-                    onClick={(event) =>
-                      handleNavigation(event, '/kontakt')
-                    }
-                  >
-                    Kontakt
-                  </a>
-                </nav>
-              )}
+
+
+    <a
+      href={language === 'en' ? '/en/privacy' : '/privatlivspolitik'}
+    onClick={(event) =>
+  handleNavigation(
+    event,
+    language === 'en' ? '/en/privacy' : '/privatlivspolitik'
+  )
+}
+    >
+      {language === 'en' ? 'Privacy Policy' : 'Privatlivspolitik'}
+    </a>
+
+    <a href={language === 'en' ? '/en/guides' : '/guider'}>
+      {language === 'en' ? 'Scam Guides' : 'Lær om svindel'}
+    </a>
+
+    <a
+      href={language === 'en' ? '/en/contact' : '/kontakt'}
+      onClick={(event) =>
+        handleNavigation(
+          event,
+          language === 'en' ? '/en/contact' : '/kontakt'
+        )
+      }
+    >
+      {language === 'en' ? 'Contact' : 'Kontakt'}
+    </a>
+  </nav>
+)}
+
             </div>
           </div>
         </div>
@@ -459,7 +533,7 @@ placeholder={t.placeholder}              rows={6}
 
             <div className="input-footer">
               <span className="character-count">
-                {message.length} / 5000 tegn
+               {message.length} / 5000 {language === 'en' ? 'characters' : 'tegn'}
               </span>
             </div>
 
@@ -479,14 +553,19 @@ placeholder={t.placeholder}              rows={6}
   <p>{t.privacyText}</p>
 
   <p>
-    <a
-      href="/privatlivspolitik"
-      onClick={(event) =>
-        handleNavigation(event, '/privatlivspolitik')
-      }
-    >
-      {t.privacyLink}
-    </a>
+    
+<a
+  href={language === 'en' ? '/en/privacy' : '/privatlivspolitik'}
+  onClick={(event) =>
+    handleNavigation(
+      event,
+      language === 'en' ? '/en/privacy' : '/privatlivspolitik'
+    )
+  }
+>
+  {t.privacyLink}
+</a>
+
   </p>
 </div>
 
@@ -500,8 +579,8 @@ placeholder={t.placeholder}              rows={6}
               />
 
               <div>
-                <strong>Vi gennemgår din besked</strong>
-                <p>Din vurdering er på vej...</p>
+                <strong>{t.loadingTitle}</strong>
+<p>{t.loadingText}</p>
               </div>
             </div>
           )}
@@ -515,7 +594,11 @@ placeholder={t.placeholder}              rows={6}
           {analysis && (
             <section
               className="results"
-              aria-label="Resultat af beskedanalysen"
+             aria-label={
+  language === 'en'
+    ? 'Message analysis result'
+    : 'Resultat af beskedanalysen'
+}
             >
               
 <div className="results-heading">
@@ -554,9 +637,9 @@ placeholder={t.placeholder}              rows={6}
 
                 {analysis.warningSigns.length > 0 && (
                   <div className="result-section">
-                    <h3>
+                    
                       <h3>{resultText.warning}</h3>
-                    </h3>
+                    
 
                     <div className="warning-list">
                       {analysis.warningSigns
@@ -576,7 +659,7 @@ placeholder={t.placeholder}              rows={6}
 
                               {sign.evidence && (
                                 <p className="evidence">
-                                  Fra beskeden: "
+                                {resultText.evidence} "
                                   {sign.evidence}"
                                 </p>
                               )}
@@ -593,9 +676,9 @@ placeholder={t.placeholder}              rows={6}
 
                 {hasScamType && (
                   <div className="result-section">
-                    <h3>
+                    
                       <h3>{resultText.scamType}</h3>
-                    </h3>
+                    
 
                     <div className="scam-type-box">
                       <strong>
@@ -631,7 +714,7 @@ placeholder={t.placeholder}              rows={6}
 
                 {sources.length > 0 && (
                   <div className="result-section">
-                    <h3>Læs mere hos officielle kilder</h3>
+                   <h3>{resultText.sources}</h3>
 
                     <ul className="source-list">
                       {sources.map((source) => (
