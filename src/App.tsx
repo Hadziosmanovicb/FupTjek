@@ -464,9 +464,19 @@ const t = language === 'en'
       {language === 'en' ? 'Privacy Policy' : 'Privatlivspolitik'}
     </a>
 
-    <a href={language === 'en' ? '/en/guides' : '/guider'}>
-      {language === 'en' ? 'Scam Guides' : 'Lær om svindel'}
-    </a>
+    
+<a
+  href={language === 'en' ? '/en/guides' : '/guider'}
+  onClick={(event) =>
+    handleNavigation(
+      event,
+      language === 'en' ? '/en/guides' : '/guider'
+    )
+  }
+>
+  {language === 'en' ? 'Scam Guides' : 'Lær om svindel'}
+</a>
+
 
     <a
       href={language === 'en' ? '/en/contact' : '/kontakt'}
