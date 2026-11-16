@@ -3,6 +3,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import OpenAI from 'openai'
 
 import { findRelevantSources } from './knowledge/sources.ts'
+import { findRelevantEnglishSources } from './knowledge/englishSources.ts'
 
 // ==========================================
 // FUPTJEK - SIKKERHEDSINDSTILLINGER
@@ -347,7 +348,9 @@ language =
     // RAG - FIND RELEVANTE KILDER
     // ==========================================
 
-    const relevantSources = findRelevantSources(sms)
+    const relevantSources = language === 'en'
+      ? findRelevantEnglishSources(sms)
+      : findRelevantSources(sms)
 
     console.log(
       'FupTjek: relevante videnskilder:',
@@ -460,13 +463,18 @@ original message.
 Do not assume the user lives in Denmark,
 the UK or the USA. Recommend country-specific
 authorities only when the location is known.
-Keep JSON property names and riskLevel values unchanged.`
+Keep JSON property names and riskLevel values unchanged.
+Use only the provided English knowledge sources.
+Do not invent URLs or references.
+Do not present country-specific reporting methods as universal.`
   : `Svar udelukkende på dansk.
 Alle forklaringer, svindeltyper, advarsler,
 anbefalinger og handlingsforslag skal være
 på dansk.
 Oversæt ikke citater fra den oprindelige besked.
-Behold JSON-feltnavne og riskLevel-værdier uændret.`}
+Behold JSON-feltnavne og riskLevel-værdier uændret.
+Brug kun de vedlagte danske videnskilder.
+Opfind ikke links eller kildehenvisninger.`}
 `,
 
       input: `
